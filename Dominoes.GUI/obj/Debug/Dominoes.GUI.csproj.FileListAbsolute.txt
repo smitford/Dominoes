@@ -1,1 +1,17 @@
 C:\Users\David\Documents\DominoesRepo\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.GUI.exe.config
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.GUI.exe.config
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.GUI.exe
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.GUI.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.AI.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.AI.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.csprojResolveAssemblyReference.cache
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\MainWindow.g.cs
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\App.g.cs
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI_MarkupCompile.cache
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI_MarkupCompile.lref
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\MainWindow.baml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.g.resources
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.Properties.Resources.resources
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.csproj.GenerateResource.Cache
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.exe
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.pdb

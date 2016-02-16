@@ -1,0 +1,9 @@
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\Dominoes.DB.dll.config
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\Dominoes.DB.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\Dominoes.DB.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\EntityFramework.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\EntityFramework.xml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\obj\Debug\Dominoes.DB.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\obj\Debug\Dominoes.DB.pdb

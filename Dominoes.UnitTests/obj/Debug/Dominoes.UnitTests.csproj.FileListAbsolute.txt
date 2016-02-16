@@ -1,0 +1,13 @@
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\Dominoes.UnitTests.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\Dominoes.UnitTests.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\Dominoes.DB.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\EntityFramework.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\Dominoes.DB.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\EntityFramework.xml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\obj\Debug\Dominoes.UnitTests.csprojResolveAssemblyReference.cache
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\obj\Debug\Dominoes.UnitTests.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\obj\Debug\Dominoes.UnitTests.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\Dominoes.UnitTests.dll.config
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.UnitTests\bin\Debug\EntityFramework.SqlServer.xml
