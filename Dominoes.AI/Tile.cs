@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dominoes.AI
 {
-    public class Tile
+    public class Tile : IComparable
     {
         public Tile() { }
 
@@ -74,6 +74,25 @@ namespace Dominoes.AI
                 dealTiles.Add(PickTileFromBase(tileBase));
             }
             return dealTiles;
+        }
+
+        public int CompareTo(object obj)
+        {
+            var t1 = this;
+            var t2 = (Tile)obj;
+
+            if (t1 > t2)
+            {
+                return 1;
+            }
+            else if (t1 < t2)
+            {
+                return -1;
+            }
+            else 
+            {
+                return 0;
+            }
         }
 
         public static bool operator >(Tile t1, Tile t2)

@@ -75,5 +75,16 @@ namespace Dominoes.UnitTests
             }
             return tiles;
         }
+
+        [TestMethod]
+        public void TilesComparerTest()
+        {
+            List<Tile> tiles = new List<Tile>();
+            tiles.Add(new Tile(4, 4));
+            tiles.Add(new Tile(6, 6));
+            tiles.Add(new Tile(1, 1));
+            var min = Tile.MinimalTile(tiles);
+            Assert.IsTrue(min == tiles[2] && min < tiles[1]);
+        }
     }
 }
