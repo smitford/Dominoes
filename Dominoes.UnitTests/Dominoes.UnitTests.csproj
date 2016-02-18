@@ -63,9 +63,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dominoes.AI\Dominoes.AI.csproj">
+      <Project>{c532930a-dbe9-498b-82a7-643a05fe7ca5}</Project>
+      <Name>Dominoes.AI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dominoes.DB\Dominoes.DB.csproj">
       <Project>{542bd0bf-a520-4c7c-bebf-4b94436cc70b}</Project>
       <Name>Dominoes.DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dominoes.GUI\Dominoes.GUI.csproj">
+      <Project>{96c4c5fc-5882-481f-9681-229049b6e969}</Project>
+      <Name>Dominoes.GUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
