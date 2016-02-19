@@ -15,3 +15,5 @@ C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.Pro
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.csproj.GenerateResource.Cache
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.exe
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\TileModel.g.cs
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\TileModel.baml

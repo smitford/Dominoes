@@ -79,7 +79,5 @@ namespace Dominoes.AI
                 Go(Tile.MinimalTile(_aiTiles), _aiTiles);
             }
         }
-
-
     }
 }
