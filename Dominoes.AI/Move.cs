@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dominoes.AI
 {
-    public enum TileSide :int
+    public enum Side :int
     {
         /*
          ---0---
@@ -21,7 +21,9 @@ namespace Dominoes.AI
         Top = 0,
         Bottom = 1,
         Left = 2,
-        Rigt = 3
+        Rigt = 3,
+        Center = 4
+
     }
 
     public class Node
@@ -34,34 +36,34 @@ namespace Dominoes.AI
 
         public Node RigthtNode { get; set; }
 
-        public List<KeyValuePair<TileSide, Node>> NeighbourNodes
+        public List<KeyValuePair<Side, Node>> NeighbourNodes
         { get
             {
-                var nodes = new List<KeyValuePair<TileSide, Node>>();
+                var nodes = new List<KeyValuePair<Side, Node>>();
               
-                nodes.Add(new KeyValuePair<TileSide, Node>(TileSide.Top, TopNode));
-                nodes.Add(new KeyValuePair<TileSide, Node>(TileSide.Bottom, BottomNode));
-                nodes.Add(new KeyValuePair<TileSide, Node>(TileSide.Left, LeftNode));
-                nodes.Add(new KeyValuePair<TileSide, Node>(TileSide.Rigt, RigthtNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Top, TopNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Bottom, BottomNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Left, LeftNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Rigt, RigthtNode));
                 nodes.RemoveAll(x => x.Value == null);
                 return nodes;
             }
         }
 
-        public void AddNewNode(Node newNode, TileSide tileSide)
+        public void AddNewNode(Node newNode, Side tileSide)
         {
             switch (tileSide)
             {
-                case TileSide.Top:
+                case Side.Top:
                     TopNode = newNode;
                     break;
-                case TileSide.Bottom:
+                case Side.Bottom:
                     BottomNode = newNode;
                     break;
-                case TileSide.Left:
+                case Side.Left:
                     LeftNode = newNode;
                     break;
-                case TileSide.Rigt:
+                case Side.Rigt:
                     RigthtNode = newNode;
                     break;
             }
@@ -106,7 +108,7 @@ namespace Dominoes.AI
             }
         }
 
-        private List<Node> LeaveSearchingRecursion(List<KeyValuePair<TileSide, Node>> NeighbourNodes, Node parentNode)
+        private List<Node> LeaveSearchingRecursion(List<KeyValuePair<Side, Node>> NeighbourNodes, Node parentNode)
         {
             var leaves = new List<Node>();
 
@@ -126,7 +128,7 @@ namespace Dominoes.AI
             return leaves;
         }
 
-        public Node NewMove(Tile tile, Node parentNode, TileSide tileSide)
+        public Node NewMove(Tile tile, Node parentNode, Side tileSide)
         {
             var newNode = new Node { CurrentTile = tile };
             if (root == null&& parentNode==null)

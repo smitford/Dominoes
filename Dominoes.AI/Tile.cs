@@ -39,10 +39,19 @@ namespace Dominoes.AI
             return doubleTiles;
         }
 
-        public static Tile MinimalTile(List<Tile> tiles)
+        public static Tile MinimalTile(List<Tile> t)
         {
-            var minimal = tiles.Min();
-            return minimal;
+            List<Tile> tiles = new List<Tile>();
+            tiles.AddRange(t);
+            tiles.RemoveAll(x => !x.IsDouble());
+            if (tiles.Count > 0)
+            {
+                var minimal = tiles.Min();
+                return minimal;
+            }
+            else {
+                return null;
+            }
         }
 
         public static List<Tile> GenerateTiles()

@@ -7,4 +7,3 @@ C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\EntityFramework.x
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\obj\Debug\Dominoes.DB.dll
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\obj\Debug\Dominoes.DB.pdb
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.DB\obj\Debug\Dominoes.DB.csprojResolveAssemblyReference.cache

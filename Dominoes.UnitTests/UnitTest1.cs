@@ -36,27 +36,27 @@ namespace Dominoes.UnitTests
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_0 = moves.NewMove(tile, root, TileSide.Top);
+            var node_0 = moves.NewMove(tile, root, Side.Top);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_1 = moves.NewMove(tile, root, TileSide.Bottom);
+            var node_1 = moves.NewMove(tile, root, Side.Bottom);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_2 = moves.NewMove(tile, root, TileSide.Left);
+            var node_2 = moves.NewMove(tile, root, Side.Left);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_0_0 = moves.NewMove(tile, node_0, TileSide.Top);
+            var node_0_0 = moves.NewMove(tile, node_0, Side.Top);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_0_2 = moves.NewMove(tile, node_0, TileSide.Left);
+            var node_0_2 = moves.NewMove(tile, node_0, Side.Left);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_2_3 = moves.NewMove(tile, node_2, TileSide.Rigt);
+            var node_2_3 = moves.NewMove(tile, node_2, Side.Rigt);
 
             var leaves = moves.Leaves;
             Assert.IsTrue(leaves.Contains(node_1) && leaves.Contains(node_0_0) && leaves.Contains(node_0_2) && leaves.Contains(node_2_3) && leaves.Count == 4);
@@ -81,10 +81,15 @@ namespace Dominoes.UnitTests
         {
             List<Tile> tiles = new List<Tile>();
             tiles.Add(new Tile(4, 4));
-            tiles.Add(new Tile(6, 6));
+            tiles.Add(new Tile(4, 6));
+            tiles.Add(new Tile(6, 2));
+            tiles.Add(new Tile(1, 2));
+            tiles.Add(new Tile(3, 2));
             tiles.Add(new Tile(1, 1));
             var min = Tile.MinimalTile(tiles);
-            Assert.IsTrue(min == tiles[2] && min < tiles[1]);
+            var st1 = min == tiles[5];
+            var st2 = min < tiles[0];
+            Assert.IsTrue(st1 && st2);
         }
     }
 }

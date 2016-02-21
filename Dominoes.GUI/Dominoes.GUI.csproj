@@ -55,11 +55,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Move.cs" />
+    <Compile Include="AimModel.xaml.cs">
+      <DependentUpon>AimModel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TileModel.xaml.cs">
       <DependentUpon>TileModel.xaml</DependentUpon>
     </Compile>
     <Compile Include="TileModelControler.cs" />
+    <Page Include="AimModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,6 +115,9 @@
       <Project>{c532930a-dbe9-498b-82a7-643a05fe7ca5}</Project>
       <Name>Dominoes.AI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
