@@ -12,15 +12,15 @@ namespace Dominoes.AI
          ---0---
         | *   * |
         | *   * |
-       |2|-----|3|
+       |1|-----|3|
         | *   * |
         | *   * |
-         ---1---
+         ---2---
     */
 
         Top = 0,
-        Bottom = 1,
-        Left = 2,
+        Left = 1,
+        Bottom = 2,
         Rigt = 3,
         Center = 4
 
@@ -35,6 +35,8 @@ namespace Dominoes.AI
         public Node LeftNode { get; set; }
 
         public Node RigthtNode { get; set; }
+
+        public Node ParentNode { get; set; }
 
         public List<KeyValuePair<Side, Node>> NeighbourNodes
         { get
@@ -67,6 +69,7 @@ namespace Dominoes.AI
                     RigthtNode = newNode;
                     break;
             }
+
         }
 
         public Tile CurrentTile { get; set; }
@@ -128,18 +131,67 @@ namespace Dominoes.AI
             return leaves;
         }
 
-        public Node NewMove(Tile tile, Node parentNode, Side tileSide)
+        public Node NewMove(Tile tile, Node parentNode, Side parentTileSide)
         {
-            var newNode = new Node { CurrentTile = tile };
-            if (root == null&& parentNode==null)
+
+            var childNode = new Node { CurrentTile = tile };
+            Side childSide = Side.Center;
+            if (!parentNode.CurrentTile.IsDouble() && (parentTileSide == Side.Left||parentTileSide == Side.Rigt) )
             {
-                root = newNode;
+                throw new Exception("Does not match");
+            }
+            if (childNode.CurrentTile.IsDouble())
+            {
+                childSide = Side.Left;
             }
             else
             {
-                parentNode.AddNewNode(newNode, tileSide);
+                if (parentNode.CurrentTile.IsDouble())
+                {
+                    var value = parentNode.CurrentTile.TopEnd;
+                    if (value == tile.TopEnd)
+                    {
+                        childSide = Side.Top;
+                    }
+                    if (value == tile.BottomEnd)
+                    {
+                        childSide = Side.Bottom;
+                    }
+                }
+                else if (parentTileSide == Side.Top)
+                {
+                    var value = parentNode.CurrentTile.TopEnd;
+                    if (value == tile.TopEnd)
+                    {
+                        childSide = Side.Top;
+                    }
+                    if (value == tile.BottomEnd)
+                    {
+                        childSide = Side.Bottom;
+                    }
+                }
+                else if (parentTileSide == Side.Bottom)
+                {
+                    var value = parentNode.CurrentTile.BottomEnd;
+                    if (value == tile.TopEnd)
+                    {
+                        childSide = Side.Top;
+                    }
+                    if (value == tile.BottomEnd)
+                    {
+                        childSide = Side.Bottom;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Does not match");
+                }
             }
-            return newNode;
+            parentNode.AddNewNode(childNode, parentTileSide);
+            childNode.AddNewNode(parentNode, childSide);
+            childNode.ParentNode = parentNode;
+
+            return childNode;
         }
 
         public Node FirstMove(Tile tile)

@@ -5,15 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Dominoes.GUI"
              mc:Ignorable="d" 
-             d:DesignHeight="70" d:DesignWidth="40" RenderTransformOrigin="1,1">
-    <Grid x:Name="Tile" HorizontalAlignment="Left" Height="70" Margin="0,0,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="0.5,0.5">
-        <Rectangle x:Name="Rect" Fill="#FF151572" Stroke="Black" RenderTransformOrigin="0.5,0.5"/>
-        <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="4,4,0,0" Stroke="Black" VerticalAlignment="Top" Width="10"/>
-        <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="15,13,0,0" Stroke="Black" VerticalAlignment="Top" Width="10"/>
-        <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="26,23,0,0" Stroke="Black" VerticalAlignment="Top" Width="10"/>
-        <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="4,39,0,0" Stroke="Black" VerticalAlignment="Top" Width="10"/>
-        <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="26,58,0,0" Stroke="Black" VerticalAlignment="Top" Width="10"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="2" Margin="0,35,0,0" VerticalAlignment="Top" Width="40"/>
+             d:DesignHeight="71" d:DesignWidth="41" RenderTransformOrigin="1,1">
+    <Grid x:Name="Tile" HorizontalAlignment="Left" Height="71" Margin="0,0,0,0" VerticalAlignment="Top" Width="41" RenderTransformOrigin="0.5,0.5">
+        <Rectangle x:Name="Rect" Fill="#FF16B1F9" Stroke="Black" RenderTransformOrigin="0.5,0.5"/>
+        <Ellipse x:Name="dot1_1" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="3,2,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot1_2" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="3,13,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot1_3" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="3,24,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+
+        <Ellipse x:Name="dot1_4" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="28,2,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot1_5" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="28,13,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot1_6" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="28,24,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+
+        <Ellipse x:Name="dot1_7" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="16,13,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="0,35,0,0" VerticalAlignment="Top" Width="40"/>
+
+        <Ellipse x:Name="dot2_1" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="3,37,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot2_2" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="3,48,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot2_3" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="3,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+
+        <Ellipse x:Name="dot2_4" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="28,37,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot2_5" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="28,48,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+        <Ellipse x:Name="dot2_6" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="28,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
+
+        <Ellipse x:Name="dot2_7" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" Margin="16,48,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" Visibility="Hidden"/>
     </Grid>
 
 

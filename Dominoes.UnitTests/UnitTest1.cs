@@ -44,7 +44,7 @@ namespace Dominoes.UnitTests
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_2 = moves.NewMove(tile, root, Side.Left);
+            var node_2 = moves.NewMove(tile, root, Side.Bottom);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
@@ -52,7 +52,7 @@ namespace Dominoes.UnitTests
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_0_2 = moves.NewMove(tile, node_0, Side.Left);
+            var node_0_2 = moves.NewMove(tile, node_0, Side.Bottom);
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);

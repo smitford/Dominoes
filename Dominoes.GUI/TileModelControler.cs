@@ -15,11 +15,11 @@ namespace Dominoes.GUI
         private Grid _parentGrid;
         double tileWidth;
         double tileHeight;
-        public List<KeyValuePair<Node, Point>> Nodes { get; private set; }
+        public List<TileModel> TileModels { get; private set; }
 
         public TileModelControler(Grid grid)
         {
-            Nodes = new List<KeyValuePair<Node, Point>>();
+            TileModels = new List<TileModel>();
             _parentGrid = grid;
             tileWidth = (new TileModel()).Tile.Width;
             tileHeight = (new TileModel()).Tile.Height;
@@ -28,73 +28,26 @@ namespace Dominoes.GUI
         public void AddNewTile(Node node, Point point, Side parentTileSide, Side childTileSide)
         {
             TileModel tileModel = new TileModel();
-            var offset = OffsetCoords(childTileSide);
-            double angle = 180 + 90 * (((int)parentTileSide + 2) % 4) % 360;
-            var cos = Math.Cos(Math.PI * (angle / 180));
-            var sin = Math.Sin(Math.PI * (angle / 180));
-            var center = new Point(point.X + (tileWidth * cos - tileHeight * sin)/2, point.Y + (tileHeight * cos + tileWidth * sin)/2);
-
-            point.X = point.X - (offset.X * cos - offset.Y * sin);
-            point.Y = point.Y - (offset.Y * cos + offset.X * sin);
-            point = (Point)(point - ParentBias(parentTileSide, angle));
-
-            tileModel.RenderTransformOrigin = new Point(0,0);
-            tileModel.VerticalAlignment = VerticalAlignment.Top;
-            tileModel.HorizontalAlignment = HorizontalAlignment.Left;
-            tileModel.RenderTransform = new RotateTransform(angle);//,-35,-20);
-
-            tileModel.Margin = new Thickness(point.X,point.Y, 0,0);
-            _parentGrid.Children.Add(tileModel);
-            Nodes.Add(new KeyValuePair<Node, Point>(node, center));
-        }
-
-        public Point ParentBias(Side tileSide, double angle)
-        {
-            double x = 0;
-            double y = 0;
-            var cos = Math.Cos(Math.PI * (angle / 180));
-            var sin = Math.Sin(Math.PI * (angle / 180));
-            if (tileSide== Side.Top|| tileSide == Side.Bottom)
+            tileModel.CurrentNode = node;
+            double angle;
+            if (parentTileSide == Side.Center)
             {
-                y = (tileWidth / 2) * cos + (tileHeight / 2) * sin;
-
-            }
-            else if(tileSide == Side.Rigt || tileSide == Side.Left)
-            {
-                x = (tileWidth / 2) * sin + (tileHeight / 2) * cos;
+                angle = 0;
             }
             else
             {
-                x = 0;
-                y = 0;
+                angle = ((180 - 90 * (int)parentTileSide) + 90 * (int)childTileSide) % 360;
             }
+            tileModel.RenderTransform = new RotateTransform(angle);
+            //tileModel.RenderTransform = new RotateTransform(180, tileWidth / 2, tileHeight / 2);
+            tileModel.Angle = angle;
 
-            return new Point(x, y);
-        }
+            var offset = tileModel.SideCoords(childTileSide);
+            point = (Point)(point - offset);
+            tileModel.Margin = new Thickness(point.X, point.Y, 0, 0);
 
-        public Point OffsetCoords(Side tileSide)
-        {
-            double x = 0;
-            double y = 0;
-            switch (tileSide)
-            {
-                case Side.Top:
-                    x = tileWidth / 2;
-                    break;
-                case Side.Bottom:
-                    x = tileWidth / 2;
-                    y = tileHeight; 
-                    break;
-                case Side.Left:
-                    y = tileHeight / 2;
-                    break;
-                case Side.Rigt:
-                    y = tileHeight / 2;
-                    x = tileWidth;
-                    break;
-            }
-            
-            return new Point(x, y);
+            _parentGrid.Children.Add(tileModel);
+            TileModels.Add(tileModel);
         }
     }
 }

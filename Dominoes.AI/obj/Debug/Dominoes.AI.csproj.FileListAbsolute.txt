@@ -3,3 +3,4 @@ C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\bin\Debug\Dominoes.AI.dll
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\bin\Debug\Dominoes.AI.pdb
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\obj\Debug\Dominoes.AI.dll
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\obj\Debug\Dominoes.AI.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\obj\Debug\Dominoes.AI.csprojResolveAssemblyReference.cache

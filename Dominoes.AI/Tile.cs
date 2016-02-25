@@ -10,20 +10,20 @@ namespace Dominoes.AI
     {
         public Tile() { }
 
-        public Tile(int leftEnd, int rightEnd)
+        public Tile(int topEnd, int bottomEnd)
         {
-            LeftEnd = leftEnd;
-            RightEnd = rightEnd;
+            TopEnd = topEnd;
+            BottomEnd = bottomEnd;
         }
 
-        public int LeftEnd { get; set; }
+        public int TopEnd { get; set; }
 
-        public int RightEnd { get; set; }
+        public int BottomEnd { get; set; }
 
 
         public bool IsDouble()
         {
-            return LeftEnd == RightEnd;
+            return TopEnd == BottomEnd;
         }
 
         public static List<Tile> DoubleTiles(List<Tile> tiles)
@@ -108,7 +108,7 @@ namespace Dominoes.AI
         {
             if (t1.IsDouble() && t2.IsDouble())
             {
-                return t1.LeftEnd > t2.RightEnd;
+                return t1.TopEnd > t2.BottomEnd;
             }
             else
             {
@@ -121,7 +121,7 @@ namespace Dominoes.AI
 
             if (t1.IsDouble() && t2.IsDouble())
             {
-                return t1.LeftEnd < t2.RightEnd;
+                return t1.TopEnd < t2.BottomEnd;
             }
             else
             {
