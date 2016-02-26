@@ -184,27 +184,31 @@ namespace Dominoes.GUI
             var point = nearConnector.ConnectorPoint;
             if (minLength <= 70)
             {
+                var childSide = Side.Top;
                 _helperPoint.Visibility = Visibility.Visible;
                 _helperPoint.Margin = new Thickness(point.X - 5, point.Y - 5, 0, 0);
 
                 var parentTileSide = nearConnector.ConnectorSide;
-                double angle = ((- 90 * (int)parentTileSide)) % 360;
-                angle = nearConnector.ConnectorTileModel.Angle;
-                //testTile.Margin = new Thickness(point.X-20 , point.Y , 0, 0);
+                double angle = (180 + nearConnector.ConnectorTileModel.Angle - (( 90 * (int)parentTileSide))) % 360;
 
                 var n = new Node { CurrentTile = new Tile(4, 5) };
 
-               // _tileModelControler.SetTileParameters(testTile, n, point, parentTileSide, Side.Top);
-
                 testTile.RenderTransform = new RotateTransform(angle);
-                //tileModel.RenderTransform = new RotateTransform(180, tileWidth / 2, tileHeight / 2);
                 testTile.Angle = angle;
                 testTile.VerticalAlignment = VerticalAlignment.Top;
                 testTile.HorizontalAlignment = HorizontalAlignment.Left;
-                var offset = testTile.SideCoords(Side.Top);
-                //point = (Point)(point - offset);
-                testTile.Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0);
 
+                var cos = Math.Cos(Math.PI * (angle / 180));
+                var sin = Math.Sin(Math.PI * (angle / 180));
+                Point b = new Point(0,0);
+                var offset = testTile.OffsetCoords(childSide);
+
+                b.X = -offset.X;
+                b.Y = -offset.Y;
+
+                b.X -=  (testTile.TileWidth / 2 * cos - testTile.TileHeight / 2 * sin);
+                b.Y -=  (testTile.TileWidth / 2 * sin + testTile.TileHeight / 2 * cos);
+                testTile.Margin = new Thickness(point.X + b.X, point.Y + b.Y, 0, 0);
             }
             else
             {

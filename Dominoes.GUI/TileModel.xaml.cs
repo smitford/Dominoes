@@ -44,8 +44,8 @@ namespace Dominoes.GUI
                     );
             }
         }
-        double TileWidth { get; }
-        double TileHeight { get; }
+        public double TileWidth { get; }
+        public double TileHeight { get; }
 
         public TileModel()
         {
@@ -63,7 +63,7 @@ namespace Dominoes.GUI
             return new Point(Center.X + bias.X, Center.Y + bias.Y);
         }
 
-        private Point OffsetCoords(Side tileSide)
+        public Point OffsetCoords(Side tileSide)
         {
             Point bias = new Point(0, 0);
             double x = 0;
