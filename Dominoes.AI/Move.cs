@@ -38,7 +38,7 @@ namespace Dominoes.AI
 
         public Node ParentNode { get; set; }
 
-        public List<KeyValuePair<Side, Node>> NeighbourNodes
+        public List<KeyValuePair<Side, Node>> AvailableNeighbourNodes
         { get
             {
                 var nodes = new List<KeyValuePair<Side, Node>>();
@@ -48,6 +48,20 @@ namespace Dominoes.AI
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Left, LeftNode));
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Rigt, RigthtNode));
                 nodes.RemoveAll(x => x.Value == null);
+                return nodes;
+            }
+        }
+
+        public List<KeyValuePair<Side, Node>> NeighbourNodes
+        {
+            get
+            {
+                var nodes = new List<KeyValuePair<Side, Node>>();
+
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Top, TopNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Bottom, BottomNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Left, LeftNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Rigt, RigthtNode));
                 return nodes;
             }
         }
@@ -96,13 +110,14 @@ namespace Dominoes.AI
 
                 notLeaves.Add(root);
 
-                var neighbourNodes = root.NeighbourNodes;
+                var neighbourNodes = root.AvailableNeighbourNodes;
                 if (neighbourNodes.Count == 0)
                 {
                     leaves.Add(root);
                 }
                 else
                 {
+                    leaves.Add(root);
                     leaves.AddRange(LeaveSearchingRecursion(neighbourNodes, root));
                 }
 
@@ -117,13 +132,19 @@ namespace Dominoes.AI
 
             foreach (var node in NeighbourNodes)
             {
-                var childNeighbourNodes = node.Value.NeighbourNodes;
+                var childNeighbourNodes = node.Value.AvailableNeighbourNodes;
                 childNeighbourNodes.Remove(childNeighbourNodes.Find(x => x.Value == parentNode));
-                if (childNeighbourNodes.Count == 0)
+
+                if (childNeighbourNodes.Count == 0 )
                 {
                     leaves.Add(node.Value);
+                } 
+                else if (node.Value.CurrentTile.IsDouble() && childNeighbourNodes.Count < 3)
+                {
+                    leaves.Add(node.Value);
+                    leaves.AddRange(LeaveSearchingRecursion(childNeighbourNodes, node.Value));
                 }
-                else
+                else 
                 {
                     leaves.AddRange(LeaveSearchingRecursion(childNeighbourNodes, node.Value));
                 }

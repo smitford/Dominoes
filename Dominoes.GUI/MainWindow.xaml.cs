@@ -24,6 +24,20 @@ namespace Dominoes.GUI
         TileModelControler _tileModelControler;
         GameLogic _gameLogic = new GameLogic();
         Point _centr;
+        AimModel _helperPoint;
+        public class Leaf
+        {
+            public Leaf(TileModel connectorTileModel, Side connectorSide, Point connectorPoint)
+            {
+                ConnectorSide = connectorSide;
+                ConnectorPoint = connectorPoint;
+                ConnectorTileModel = connectorTileModel;
+            }
+            public Side ConnectorSide { get; set; }
+            public Point ConnectorPoint { get; set; }
+            public TileModel ConnectorTileModel { get; set; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -61,6 +75,11 @@ namespace Dominoes.GUI
 
             var a = 5;
             DrawGame();
+
+            testTile.CurrentNode = new Node { CurrentTile = new Tile(4, 5) };
+            _helperPoint = new AimModel { VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
+            _helperPoint.Visibility = Visibility.Hidden;
+            Background.Children.Add(_helperPoint);
         }
 
         private void DrawGame()
@@ -75,16 +94,40 @@ namespace Dominoes.GUI
             var m6 = moves.NewMove(new Tile(4, 2), m3, Side.Top);
 
             _tileModelControler.AddNewTile(moves.First, _centr, Side.Center ,Side.Top);
-            DrawingRecursion(moves.First.NeighbourNodes, moves.First);
+            DrawingRecursion(moves.First.AvailableNeighbourNodes, moves.First);
+
+            var leaves = moves.Leaves;
+            GetLeavesConnectors(leaves);
+        }
+
+        private List<Leaf> GetLeavesConnectors(List<Node> leaves)
+        {
+            var leavesConnectors = new List<Leaf>();
+            foreach (var node in leaves)
+            {
+                var sides = node.NeighbourNodes.Where(x => x.Value == null).ToList();
+                var tileModel = _tileModelControler.TileModels.Find(x => x.CurrentNode == node);
+                if (!node.CurrentTile.IsDouble())
+                {
+                    sides.RemoveAll(x => x.Key == Side.Left || x.Key == Side.Rigt);
+                }
+                foreach (var side in sides)
+                {
+                    var point = tileModel.SideCoords(side.Key);
+                    leavesConnectors.Add(new Leaf(tileModel, side.Key, point));
+                    //Background.Children.Add(new Ellipse { Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0), Fill = Brushes.OrangeRed, Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left });
+                }
+            }
+            return leavesConnectors;
         }
 
         private void DrawingRecursion(List<KeyValuePair<Side, Node>> NeighbourNodes, Node parentNode)
         {
-            //var leaves = new List<Node>();
 
             foreach (var node in NeighbourNodes)
             {
-                var childNeighbourNodes = node.Value.NeighbourNodes;
+                
+                var childNeighbourNodes = node.Value.AvailableNeighbourNodes;
                 childNeighbourNodes.Remove(childNeighbourNodes.Find(x => x.Value == parentNode));
 
                 var parentTileModel = _tileModelControler.TileModels.Find(x => x.CurrentNode == parentNode);
@@ -92,11 +135,11 @@ namespace Dominoes.GUI
                 var parentSide = (Side)((-parentTileModel.Angle/90)%4);
 
                 //var parentSide = (Side)(((((180 - parentTileModel.Angle /*- 90*Math.Cos(parentTileModel.Angle)*/) / 360 * 4)) % 4) % 4);
-                var connectingSide = (Side)(((int)parentNode.NeighbourNodes.Find(x => x.Value == node.Value).Key + (int)parentSide)%4);
-                var childSide = node.Value.NeighbourNodes.Find(x => x.Value == parentNode).Key;
+                var connectingSide = (Side)(((int)parentNode.AvailableNeighbourNodes.Find(x => x.Value == node.Value).Key + (int)parentSide)%4);
+                var childSide = node.Value.AvailableNeighbourNodes.Find(x => x.Value == parentNode).Key;
                 var point = (Point)parentTileModel.Connector(connectingSide);
                 _tileModelControler.AddNewTile(node.Value, point, connectingSide, childSide);
-                Background.Children.Add(new Ellipse { Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0), Fill = Brushes.OrangeRed, Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left});
+                //Background.Children.Add(new Ellipse { Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0), Fill = Brushes.OrangeRed, Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left});
 
                 if (childNeighbourNodes.Count >= 0)
                 {
@@ -122,8 +165,43 @@ namespace Dominoes.GUI
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            var x = Mouse.GetPosition(Application.Current.MainWindow).X;
-            var y = Mouse.GetPosition(Application.Current.MainWindow).Y;
+            var mouse = new Point(Mouse.GetPosition(Application.Current.MainWindow).X, Mouse.GetPosition(Application.Current.MainWindow).Y);
+
+            Leaf connector = GetNearConnector(mouse);
+        }
+
+        private Leaf GetNearConnector(Point mouse)
+        {
+            //DrawGame();
+
+            var connectors = GetLeavesConnectors(_gameLogic.GameMoves.Leaves).ToList();
+            var points = connectors.Select(x => x.ConnectorPoint).ToList();
+            var vectors = points.Select(x=> (x-mouse)).ToList();
+            var minLength = points.Select(x => (x - mouse).Length).Min();
+            var minVectors = vectors.Find(x => x.Length == minLength);
+            var nearConnector = connectors.Find(x=>x.ConnectorPoint==( mouse + minVectors));
+
+            var point = nearConnector.ConnectorPoint;
+            if (minLength <= 70)
+            {
+                _helperPoint.Visibility = Visibility.Visible;
+                _helperPoint.Margin = new Thickness(point.X - 5, point.Y - 5, 0, 0);
+
+                var parentTileSide = nearConnector.ConnectorSide;
+                var angle = ((- 90 * (int)parentTileSide)) % 360;
+                //testTile.Margin = new Thickness(point.X-20 , point.Y , 0, 0);
+
+                var n = new Node { CurrentTile = new Tile(4, 5) };
+
+                testTile = _tileModelControler.SetTileParameters(n, point, parentTileSide, Side.Top);
+               // testTile.RenderTransform = new RotateTransform(180-angle);
+
+            }
+            else
+            {
+                _helperPoint.Visibility = Visibility.Hidden;
+            }
+            return null;
         }
     }
 }
