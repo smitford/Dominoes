@@ -19,7 +19,7 @@ namespace Dominoes.GUI
     /// <summary>
     /// Interaction logic for TileModel.xaml
     /// </summary>
-    public partial class TileModel : UserControl
+    public partial class TileModel : UserControl, ICloneable
     {
         private Node _currentNode;
         public Node CurrentNode {
@@ -194,6 +194,11 @@ namespace Dominoes.GUI
                     dot2_6.Visibility = Visibility.Visible;
                     break;
             }
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

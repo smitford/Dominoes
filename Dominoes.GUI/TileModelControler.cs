@@ -27,15 +27,15 @@ namespace Dominoes.GUI
 
         public void AddNewTile(Node node, Point point, Side parentTileSide, Side childTileSide)
         {
-            TileModel tileModel = SetTileParameters(node,point, parentTileSide, childTileSide);
+            TileModel tileModel = new TileModel();
+            SetTileParameters(tileModel,node, point, parentTileSide, childTileSide);
 
             _parentGrid.Children.Add(tileModel);
             TileModels.Add(tileModel);
         }
 
-        public TileModel SetTileParameters(Node node, Point point, Side parentTileSide, Side childTileSide)
+        public TileModel SetTileParameters(TileModel tileModel, Node node, Point point, Side parentTileSide, Side childTileSide)
         {
-            TileModel tileModel = new TileModel();
             tileModel.CurrentNode = node;
             double angle;
             if (parentTileSide == Side.Center)
@@ -49,7 +49,8 @@ namespace Dominoes.GUI
             tileModel.RenderTransform = new RotateTransform(angle);
             //tileModel.RenderTransform = new RotateTransform(180, tileWidth / 2, tileHeight / 2);
             tileModel.Angle = angle;
-
+            tileModel.VerticalAlignment = VerticalAlignment.Top;
+            tileModel.HorizontalAlignment = HorizontalAlignment.Left;
             var offset = tileModel.SideCoords(childTileSide);
             point = (Point)(point - offset);
             tileModel.Margin = new Thickness(point.X, point.Y, 0, 0);

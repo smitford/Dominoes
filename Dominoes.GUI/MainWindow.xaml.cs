@@ -188,13 +188,22 @@ namespace Dominoes.GUI
                 _helperPoint.Margin = new Thickness(point.X - 5, point.Y - 5, 0, 0);
 
                 var parentTileSide = nearConnector.ConnectorSide;
-                var angle = ((- 90 * (int)parentTileSide)) % 360;
+                double angle = ((- 90 * (int)parentTileSide)) % 360;
+                angle = nearConnector.ConnectorTileModel.Angle;
                 //testTile.Margin = new Thickness(point.X-20 , point.Y , 0, 0);
 
                 var n = new Node { CurrentTile = new Tile(4, 5) };
 
-                testTile = _tileModelControler.SetTileParameters(n, point, parentTileSide, Side.Top);
-               // testTile.RenderTransform = new RotateTransform(180-angle);
+               // _tileModelControler.SetTileParameters(testTile, n, point, parentTileSide, Side.Top);
+
+                testTile.RenderTransform = new RotateTransform(angle);
+                //tileModel.RenderTransform = new RotateTransform(180, tileWidth / 2, tileHeight / 2);
+                testTile.Angle = angle;
+                testTile.VerticalAlignment = VerticalAlignment.Top;
+                testTile.HorizontalAlignment = HorizontalAlignment.Left;
+                var offset = testTile.SideCoords(Side.Top);
+                //point = (Point)(point - offset);
+                testTile.Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0);
 
             }
             else
