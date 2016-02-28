@@ -20,6 +20,22 @@ namespace Dominoes.AI
 
         public int BottomEnd { get; set; }
 
+        public int GetSideValue(Side side)
+        {
+            if (side == Side.Top)
+            {
+                return TopEnd;
+            }
+            else if (side == Side.Bottom)
+            {
+                return BottomEnd;
+            }
+            else if (this.IsDouble() && (side == Side.Left || side == Side.Right))
+            {
+                return BottomEnd;
+            }
+            throw new Exception("Not existing end");
+        }
 
         public bool IsDouble()
         {
@@ -57,13 +73,24 @@ namespace Dominoes.AI
         public static List<Tile> GenerateTiles()
         {
             var tiles = new List<Tile>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i <= 6; i++)
             {
-                for (int j = i; j < 6; j++)
+                for (int j = i; j <= 6; j++)
                 {
                     var tile = new Tile(i, j);
                     tiles.Add(tile);
                 }
+            }
+            // Shuffle tiles
+            var rand = new Random();
+            int n = tiles.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rand.Next(n + 1);
+                var value = tiles[k];
+                tiles[k] = tiles[n];
+                tiles[n] = value;
             }
             return tiles;
         }

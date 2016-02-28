@@ -21,7 +21,7 @@ namespace Dominoes.AI
         Top = 0,
         Left = 1,
         Bottom = 2,
-        Rigt = 3,
+        Right = 3,
         Center = 4
 
     }
@@ -46,7 +46,7 @@ namespace Dominoes.AI
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Top, TopNode));
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Bottom, BottomNode));
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Left, LeftNode));
-                nodes.Add(new KeyValuePair<Side, Node>(Side.Rigt, RigthtNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Right, RigthtNode));
                 nodes.RemoveAll(x => x.Value == null);
                 return nodes;
             }
@@ -61,7 +61,7 @@ namespace Dominoes.AI
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Top, TopNode));
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Bottom, BottomNode));
                 nodes.Add(new KeyValuePair<Side, Node>(Side.Left, LeftNode));
-                nodes.Add(new KeyValuePair<Side, Node>(Side.Rigt, RigthtNode));
+                nodes.Add(new KeyValuePair<Side, Node>(Side.Right, RigthtNode));
                 return nodes;
             }
         }
@@ -79,7 +79,7 @@ namespace Dominoes.AI
                 case Side.Left:
                     LeftNode = newNode;
                     break;
-                case Side.Rigt:
+                case Side.Right:
                     RigthtNode = newNode;
                     break;
             }
@@ -120,8 +120,6 @@ namespace Dominoes.AI
                     leaves.Add(root);
                     leaves.AddRange(LeaveSearchingRecursion(neighbourNodes, root));
                 }
-
-
                 return leaves;
             }
         }
@@ -154,10 +152,21 @@ namespace Dominoes.AI
 
         public Node NewMove(Tile tile, Node parentNode, Side parentTileSide)
         {
-
             var childNode = new Node { CurrentTile = tile };
+            Side childSide = GetMatchSide(parentNode, childNode, parentTileSide);
+
+            parentNode.AddNewNode(childNode, parentTileSide);
+            childNode.AddNewNode(parentNode, childSide);
+            childNode.ParentNode = parentNode;
+
+            return childNode;
+        }
+
+        public Side GetMatchSide(Node parentNode, Node childNode, Side parentTileSide)
+        {
+            var tile = childNode.CurrentTile;
             Side childSide = Side.Center;
-            if (!parentNode.CurrentTile.IsDouble() && (parentTileSide == Side.Left||parentTileSide == Side.Rigt) )
+            if (!parentNode.CurrentTile.IsDouble() && (parentTileSide == Side.Left || parentTileSide == Side.Right))
             {
                 throw new Exception("Does not match");
             }
@@ -208,11 +217,7 @@ namespace Dominoes.AI
                     throw new Exception("Does not match");
                 }
             }
-            parentNode.AddNewNode(childNode, parentTileSide);
-            childNode.AddNewNode(parentNode, childSide);
-            childNode.ParentNode = parentNode;
-
-            return childNode;
+            return childSide;
         }
 
         public Node FirstMove(Tile tile)

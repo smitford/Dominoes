@@ -19,7 +19,7 @@ namespace Dominoes.GUI
     /// <summary>
     /// Interaction logic for TileModel.xaml
     /// </summary>
-    public partial class TileModel : UserControl, ICloneable
+    public partial class TileModel : UserControl
     {
         private Node _currentNode;
         public Node CurrentNode {
@@ -30,12 +30,31 @@ namespace Dominoes.GUI
             set
             {
                 _currentNode = value;
-                SetTileSides(value.CurrentTile);
+                SetTileSideDots(value.CurrentTile);
             }
         }
-        public double Angle { get; set; }
+
+        private int _angle;
+        public int Angle
+        {
+            get { return _angle; }
+            set
+            {
+                _angle = value%4;
+                this.RenderTransform = new RotateTransform((360 - _angle * (-90)) % 360, TileWidth / 2, TileHeight / 2);
+            }
+        }
+
         public Point Center
         {
+            set
+            {
+                var connectingSide =(Side)( (4+(Angle/90)) % 4);
+                var x = (TileWidth / 2 * Math.Cos(Angle / 180 * Math.PI) - TileHeight / 2 * Math.Sin(Angle / 180 * Math.PI));
+                var y = (TileWidth / 2 * Math.Sin(Angle / 180 * Math.PI) + TileHeight / 2 * Math.Cos(Angle / 180 * Math.PI));
+
+                Margin = new Thickness(value.X - x, value.Y - y, 0, 0);
+            }
             get
             {
                 return new Point(
@@ -44,6 +63,7 @@ namespace Dominoes.GUI
                     );
             }
         }
+
         public double TileWidth { get; }
         public double TileHeight { get; }
 
@@ -69,8 +89,6 @@ namespace Dominoes.GUI
             double x = 0;
             double y = 0;
 
-            //var cos = Math.Cos(Math.PI * (Angle / 180));
-            //var sin = Math.Sin(Math.PI * (Angle / 180));
             if (tileSide != Side.Center)
             {
                 switch (tileSide)
@@ -84,11 +102,11 @@ namespace Dominoes.GUI
                     case Side.Left:
                         x -= TileWidth / 2;
                         break;
-                    case Side.Rigt:
+                    case Side.Right:
                         x += TileWidth / 2;
                         break;
                 }
-                bias = Rotate(new Point(x, y), -Angle);
+                bias = Rotate(new Point(x, y), (360 + Angle * 90) % 360);
             }
 
             return bias;
@@ -96,23 +114,67 @@ namespace Dominoes.GUI
 
         public Point Connector(Side tileSide)
         {
-            var b = (Angle / 90)%4;
+            var b = Angle;
             var side = (Side)(((int)tileSide + b) % 4);
-            var point = OffsetCoords(side);
+            var point = ConnectorOffset(side);
 
-            return new Point(Center.X + point.X, Center.Y + point.Y);
+            return new Point(Center.X - point.X, Center.Y - point.Y);
+        }
+
+        public Point ConnectorOffset(Side tileSide)
+        {
+            var side = tileSide;// (Side)(((int)tileSide) % 4);
+            double x = 0;
+            double y = 0;
+
+            if (tileSide != Side.Center)
+            {
+                switch (tileSide)
+                {
+                    case Side.Top:
+                        y += TileHeight / 2;
+                        break;
+                    case Side.Bottom:
+                        y -= TileHeight / 2;
+                        break;
+                    case Side.Left:
+                        x += TileWidth / 2;
+                        break;
+                    case Side.Right:
+                        x -= TileWidth / 2;
+                        break;
+                }
+            }
+            var offset = new Point(x, y);
+
+            var point = Rotate(offset, (360+Angle*90)%360);
+                return new Point(point.X, point.Y);
         }
 
         private Point Rotate(Point point, double angle)
         {
             var cos = Math.Cos(Math.PI * (angle / 180));
             var sin = Math.Sin(Math.PI * (angle / 180));
-            return new Point(point.X * cos + point.Y * sin, point.X * sin + point.Y * cos);
+            return new Point(point.X * cos - point.Y * sin, point.X * sin + point.Y * cos); 
         }
 
-
-        private void SetTileSides(Tile tile)
+        private void SetTileSideDots(Tile tile)
         {
+            dot1_1.Visibility = Visibility.Hidden;
+            dot1_2.Visibility = Visibility.Hidden;
+            dot1_3.Visibility = Visibility.Hidden;
+            dot1_4.Visibility = Visibility.Hidden;
+            dot1_5.Visibility = Visibility.Hidden;
+            dot1_6.Visibility = Visibility.Hidden;
+            dot1_7.Visibility = Visibility.Hidden;
+            dot2_1.Visibility = Visibility.Hidden;
+            dot2_2.Visibility = Visibility.Hidden;
+            dot2_3.Visibility = Visibility.Hidden;
+            dot2_4.Visibility = Visibility.Hidden;
+            dot2_5.Visibility = Visibility.Hidden;
+            dot2_6.Visibility = Visibility.Hidden;
+            dot2_7.Visibility = Visibility.Hidden;
+
             List<string> dots = new List<string>();
             var topValue= tile.TopEnd;
             var bottomValue = tile.BottomEnd;
@@ -196,9 +258,5 @@ namespace Dominoes.GUI
             }
         }
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 }

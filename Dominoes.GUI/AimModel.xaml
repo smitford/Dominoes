@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="9" d:DesignWidth="9">
     <Grid x:Name="Aim" Margin="0,0,0,0">
-        <Ellipse HorizontalAlignment="Left" Height="9" Margin="0,0,0,0" Stroke="#FFFF30EC" VerticalAlignment="Top" Width="9" StrokeThickness="3"/>
+        <Ellipse HorizontalAlignment="Left" Height="9" Margin="0,0,0,0" Stroke="#FF25D86F" VerticalAlignment="Top" Width="9" StrokeThickness="3"/>
     </Grid>
 </UserControl>

@@ -56,7 +56,7 @@ namespace Dominoes.UnitTests
 
             tile = tiles[new Random().Next(tiles.Count)];
             tiles.Remove(tile);
-            var node_2_3 = moves.NewMove(tile, node_2, Side.Rigt);
+            var node_2_3 = moves.NewMove(tile, node_2, Side.Right);
 
             var leaves = moves.Leaves;
             Assert.IsTrue(leaves.Contains(node_1) && leaves.Contains(node_0_0) && leaves.Contains(node_0_2) && leaves.Contains(node_2_3) && leaves.Count == 4);

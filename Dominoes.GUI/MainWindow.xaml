@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dominoes.GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="610" Width="900" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove">
-    <Grid x:Name="Background" Background="#FFE2D4AD">
-        <local:TileModel x:Name="testTile" HorizontalAlignment="Left" Margin="40,472,0,0" VerticalAlignment="Top"/>
-    </Grid>
+        Title="MainWindow" Height="610" Width="900" MouseMove="Window_MouseMove">
+    <Grid x:Name="Background" Background="#FFE2D4AD" MouseDown="Background_MouseDown"/>
 </Window>
