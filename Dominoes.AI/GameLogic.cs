@@ -21,18 +21,18 @@ namespace Dominoes.AI
         public Moves GameMoves { get; private set; }
         private int movesCount = 0;
 
-        public void PlayerMoves(Tile tile, Node node, Side tileSide)
+        public Node PlayerMoves(Tile tile, Node node, Side tileSide)
         {
             if (PlayerTurn)
             {
-                Go(tile, node, tileSide, PlayerTiles);
+                return Go(tile, node, tileSide, PlayerTiles);
             }
             else { throw new Exception("Is not player's turn");}
         }
 
-        private void Go(Tile tile, Node node, Side tileSide, List<Tile> tiles)
+        private Node Go(Tile tile, Node parentNode, Side tileSide, List<Tile> tiles)
         {
-            var newMove = GameMoves.NewMove(tile, node, tileSide);
+            var newMove = GameMoves.NewMove(tile, parentNode, tileSide);
             tiles.Remove(tile);
             if (!PlayerTurn && AImovesEnent != null)
             {
@@ -42,8 +42,9 @@ namespace Dominoes.AI
             {
                 PlayerMovesEnent(newMove);
             }
-            PlayerTurn = true;// !PlayerTurn;
+            PlayerTurn = !PlayerTurn;
             movesCount++;
+            return newMove;
         }
 
         private void Go(Tile tile, List<Tile> tiles)

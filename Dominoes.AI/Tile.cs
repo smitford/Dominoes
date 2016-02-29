@@ -65,7 +65,8 @@ namespace Dominoes.AI
                 var minimal = tiles.Min();
                 return minimal;
             }
-            else {
+            else
+            {
                 return null;
             }
         }
@@ -105,7 +106,7 @@ namespace Dominoes.AI
         public static List<Tile> DealTiles(List<Tile> tileBase)
         {
             var dealTiles = new List<Tile>();
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i <= 7; i++)
             {
                 dealTiles.Add(PickTileFromBase(tileBase));
             }

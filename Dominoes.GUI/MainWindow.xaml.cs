@@ -27,7 +27,7 @@ namespace Dominoes.GUI
         AimModel _helperPoint;
         TileModel _newTile;
         Leaf _nearConnector;
-
+        bool _gameStarted;
         public class Leaf
         {
             public Leaf(TileModel connectorTileModel, Side connectorSide, Point connectorPoint)
@@ -44,8 +44,16 @@ namespace Dominoes.GUI
         public MainWindow()
         {
             InitializeComponent();
+            pickButton.IsEnabled = false;
+            saveButton.IsEnabled = false;
+            _gameStarted = false; 
+        }
 
-            _centr = new Point(400, 200);
+        private void InitGame()
+        {
+            this.MouseMove += Window_MouseMove;
+            Background.MouseDown += Background_MouseDown;
+            _centr = new Point(Width / 2, Height / 2 - Background.Margin.Top-100);
             _tileModelControler = new TileModelControler(Background);
             _tileModelControler.TilePicked += _tileModelControler_TilePicked;
             _gameLogic.InitGame();
@@ -55,6 +63,44 @@ namespace Dominoes.GUI
             DrawGame();
             HelperInit();
             ShowUserTilles(_gameLogic.PlayerTiles);
+            _gameStarted = true;
+        }
+
+        private void startButton_Click(object sender, RoutedEventArgs e)
+        {
+            InitGame();
+        }
+
+        private void restartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Background.Children.Clear();
+            _tileModelControler.GameTableTileModels.Clear();
+            _tileModelControler.UserBaseTileModels.Clear();
+
+            InitGame();
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void pickButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in _tileModelControler.UserBaseTileModels)
+            {
+                Background.Children.Remove(item);
+            }
+            _gameLogic.PlayerTile.Add(Tile.PickTileFromBase(_gameLogic.TileBase));
+            ShowUserTilles(_gameLogic.PlayerTiles);
+            if (_gameLogic.PlayerTiles.Count < 7)
+            {
+                pickButton.IsEnabled = true;
+            }
+            else
+            {
+                pickButton.IsEnabled = false;
+            }
         }
 
         private void _tileModelControler_TilePicked(Node node)
@@ -66,7 +112,7 @@ namespace Dominoes.GUI
         {
             for (int i = 0; i < playerTiles.Count; i++)
             {
-                var p = new Point((Width/2- (playerTiles.Count-1)*50/2) + i * 50, Height-100);
+                var p = new Point((Width/2- (playerTiles.Count-1)*50/2) + i * 50, Height-180);
                 _tileModelControler.AddTileToUserBase(playerTiles[i], p);
 
             }
@@ -75,21 +121,21 @@ namespace Dominoes.GUI
         private void DrawGame()
         {
             var moves = _gameLogic.GameMoves;
-            //var m0 = moves.First;
+            var m0 = moves.First;
 
-            var m0  =  moves.FirstMove(new Tile(0, 0));
-            var m1  =  moves.NewMove(new Tile(1, 0), m0, Side.Top);
-            var m1_1 = moves.NewMove(new Tile(1, 1), m1, Side.Top);
-            var m2 = moves.NewMove(new Tile(2, 0), m0, Side.Right);
-            var m2_2 = moves.NewMove(new Tile(2, 2), m2, Side.Top);
-            var m2_3 = moves.NewMove(new Tile(2, 2), m2_2, Side.Bottom);
-            var m2_4 = moves.NewMove(new Tile(2, 3), m2_3, Side.Top);
-            var m2_5 = moves.NewMove(new Tile(4, 2), m2_3, Side.Right);
+            //var m0  =  moves.FirstMove(new Tile(0, 0));
+            //var m1  =  moves.NewMove(new Tile(1, 0), m0, Side.Top);
+            //var m1_1 = moves.NewMove(new Tile(1, 1), m1, Side.Top);
+            //var m2 = moves.NewMove(new Tile(2, 0), m0, Side.Right);
+            //var m2_2 = moves.NewMove(new Tile(2, 2), m2, Side.Top);
+            //var m2_3 = moves.NewMove(new Tile(2, 2), m2_2, Side.Bottom);
+            //var m2_4 = moves.NewMove(new Tile(2, 3), m2_3, Side.Top);
+            //var m2_5 = moves.NewMove(new Tile(4, 2), m2_3, Side.Right);
 
-            var m3 = moves.NewMove(new Tile(3, 0), m0, Side.Left);
-            var m3_3 = moves.NewMove(new Tile(3, 3), m3, Side.Top);
-            var m4 = moves.NewMove(new Tile(4, 0), m0, Side.Bottom);
-            var m4_4 = moves.NewMove(new Tile(4, 4), m4, Side.Bottom);
+            //var m3 = moves.NewMove(new Tile(3, 0), m0, Side.Left);
+            //var m3_3 = moves.NewMove(new Tile(3, 3), m3, Side.Top);
+            //var m4 = moves.NewMove(new Tile(4, 0), m0, Side.Bottom);
+            //var m4_4 = moves.NewMove(new Tile(4, 4), m4, Side.Bottom);
 
             _tileModelControler.AddTileToGame(moves.First, _centr, Side.Center, Side.Top);
             DrawingRecursion(moves.First.AvailableNeighbourNodes, moves.First);
@@ -119,13 +165,11 @@ namespace Dominoes.GUI
             }
         }
 
-        
-
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var model = e.Source;
 
-            if (!_tileModelControler.UserBaseTileModels.Contains(model) && _nearConnector != null )
+            if (!_tileModelControler.UserBaseTileModels.Contains(model) && _nearConnector != null &&_newTile.CurrentNode!=null)
             {
                 var pn = _nearConnector.ConnectorTileModel.CurrentNode;
 
@@ -137,14 +181,24 @@ namespace Dominoes.GUI
                 var t = _newTile.CurrentNode.CurrentTile;
                 var point = _nearConnector.ConnectorPoint;
 
-                var currNode = moves.NewMove(t, pn,(Side)_nearConnector.ConnectorSide);
+                //var currNode = moves.NewMove(t, pn,(Side)_nearConnector.ConnectorSide);
+                var currNode = _gameLogic.PlayerMoves(t, pn, (Side)_nearConnector.ConnectorSide);
                 _tileModelControler.AddTileToGame(currNode, point, (Side)parentSide, childTileSide);
+
+                var selectedTile = _tileModelControler.UserBaseTileModels.Find(x=>x.CurrentNode == _newTile.CurrentNode);
+                Background.Children.Remove(selectedTile);
+                _tileModelControler.UserBaseTileModels.Remove(selectedTile);
+                _newTile.CurrentNode = null;
+                if(_gameLogic.PlayerTiles.Count <7)
+                {
+                    pickButton.IsEnabled = true;
+                }
             }
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            var mouse = new Point(Mouse.GetPosition(Application.Current.MainWindow).X, Mouse.GetPosition(Application.Current.MainWindow).Y);
+            var mouse = new Point(Mouse.GetPosition(Application.Current.MainWindow).X - Background.Margin.Left, Mouse.GetPosition(Application.Current.MainWindow).Y - Background.Margin.Top);
 
             if (_newTile.CurrentNode != null)
             {
@@ -248,13 +302,14 @@ namespace Dominoes.GUI
 
         private void _gameLogic_AImovesEnent(Node node)
         {
-            //throw new NotImplementedException();
+            
         }
 
         private void _gameLogic_PlayerMovesEnent(Node node)
         {
             //throw new NotImplementedException();
         }
+
 
     }
 }

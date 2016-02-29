@@ -30,7 +30,10 @@ namespace Dominoes.GUI
             set
             {
                 _currentNode = value;
-                SetTileSideDots(value.CurrentTile);
+                if (value != null)
+                {
+                    SetTileSideDots(value.CurrentTile);
+                }
             }
         }
 

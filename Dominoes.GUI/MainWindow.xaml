@@ -5,6 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dominoes.GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="610" Width="900" MouseMove="Window_MouseMove">
-    <Grid x:Name="Background" Background="#FFE2D4AD" MouseDown="Background_MouseDown"/>
+        Title="MainWindow" Height="771.5" Width="1353" Background="#FF7E1F15" ResizeMode="CanMinimize" WindowStyle="ToolWindow">
+    <Grid  Background="#FF7E1F15" Margin="0,0,0,0">
+        <Grid x:Name="Background" Background="#FFE2D4AD" Margin="0,54,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="690" Width="1347"/>
+        <Button x:Name="startButton" Content="Start game" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="128" Click="startButton_Click" Margin="4,2,0,0"/>
+        <Button x:Name="restartButton" Content="Restart" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Margin="138,2,0,0" Width="128" Click="restartButton_Click"/>
+        <Button x:Name="saveButton" Content="Save results" HorizontalAlignment="Left" Height="47" Margin="271,2,0,0" VerticalAlignment="Top" Width="128" Click="saveButton_Click"/>
+        <Button x:Name="pickButton" Content="Pick new tile" HorizontalAlignment="Left" Height="47" Margin="1205,2,0,0" VerticalAlignment="Top" Width="128" Click="pickButton_Click"/>
+
+    </Grid>
+
 </Window>
