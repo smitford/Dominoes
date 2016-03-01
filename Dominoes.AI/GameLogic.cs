@@ -8,7 +8,7 @@ namespace Dominoes.AI
 {
     public class GameLogic
     {
-        public delegate void NewMoveHandler (Node node);
+        public delegate void NewMoveHandler (Node parentNode, Node childNode);
         public event NewMoveHandler AImovesEnent;
         public event NewMoveHandler PlayerMovesEnent;
 
@@ -17,13 +17,14 @@ namespace Dominoes.AI
         public List<Tile> AiTiles { get; private set; }
 
         public List<Tile> PlayerTile { get { return PlayerTiles; } }
-        public bool PlayerTurn { get; private set; }
+        public bool IsPlayerTurn { get; private set; }
         public Moves GameMoves { get; private set; }
         private int movesCount = 0;
+        private Scoring _scoring;
 
         public Node PlayerMoves(Tile tile, Node node, Side tileSide)
         {
-            if (PlayerTurn)
+            if (IsPlayerTurn)
             {
                 return Go(tile, node, tileSide, PlayerTiles);
             }
@@ -34,15 +35,15 @@ namespace Dominoes.AI
         {
             var newMove = GameMoves.NewMove(tile, parentNode, tileSide);
             tiles.Remove(tile);
-            if (!PlayerTurn && AImovesEnent != null)
+            if (!IsPlayerTurn && AImovesEnent != null)
             {
-                AImovesEnent(newMove);
+                AImovesEnent(parentNode, newMove);
             }
-            else if (PlayerTurn && PlayerMovesEnent != null)
+            else if (IsPlayerTurn && PlayerMovesEnent != null)
             {
-                PlayerMovesEnent(newMove);
+                PlayerMovesEnent(parentNode, newMove);
             }
-            PlayerTurn = !PlayerTurn;
+            IsPlayerTurn = !IsPlayerTurn;
             movesCount++;
             return newMove;
         }
@@ -51,16 +52,18 @@ namespace Dominoes.AI
         {
             var newMove = GameMoves.FirstMove(tile);
             tiles.Remove(tile);
-            if (!PlayerTurn && AImovesEnent != null)
+            if (!IsPlayerTurn && AImovesEnent != null)
             {
-                AImovesEnent(newMove);
+                AImovesEnent(null, newMove);
             }
-            else if (PlayerTurn && PlayerMovesEnent != null)
+            else if (IsPlayerTurn && PlayerMovesEnent != null)
             {
-                PlayerMovesEnent(newMove);
+                PlayerMovesEnent(null, newMove);
             }
-            PlayerTurn = true; //!PlayerTurn;
+            IsPlayerTurn = !IsPlayerTurn;
             movesCount++;
+
+            _scoring.CheckGameState(GameMoves, PlayerTiles, AiTiles);
         }
 
         public GameLogic()
@@ -68,7 +71,7 @@ namespace Dominoes.AI
             TileBase = new List<Tile>();
             PlayerTiles = new List<Tile>();
             AiTiles = new List<Tile>();
-
+            _scoring = new Scoring();
             GameMoves = new Moves();
         }
 
@@ -78,8 +81,26 @@ namespace Dominoes.AI
             PlayerTiles.AddRange(Tile.DealTiles(TileBase));
             AiTiles.AddRange(Tile.DealTiles(TileBase));
 
-            PlayerTurn = true;// Tile.MinimalTile(AiTiles) > Tile.MinimalTile(PlayerTiles);
-            if (PlayerTurn)
+            if (Tile.MinimalTile(AiTiles) == null && Tile.MinimalTile(PlayerTiles) == null)
+            {
+                ResetGame();
+                InitGame();
+                return;
+            }
+            else if (Tile.MinimalTile(AiTiles) == null)
+            {
+                IsPlayerTurn = true;
+            }
+            else if (Tile.MinimalTile(PlayerTiles) == null)
+            {
+                IsPlayerTurn = false;
+            }
+            else
+            {
+                IsPlayerTurn = Tile.MinimalTile(AiTiles) > Tile.MinimalTile(PlayerTiles);
+            }
+
+            if (IsPlayerTurn)
             {
                 Go(Tile.MinimalTile(PlayerTiles), PlayerTiles);
             }
@@ -87,6 +108,15 @@ namespace Dominoes.AI
             {
                 Go(Tile.MinimalTile(AiTiles), AiTiles);
             }
+        }
+
+        public void ResetGame()
+        {
+            TileBase.Clear();
+            PlayerTiles.Clear();
+            AiTiles.Clear();
+            movesCount = 0;
+            GameMoves = new Moves();
         }
     }
 }

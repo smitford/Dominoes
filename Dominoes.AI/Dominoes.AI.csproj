@@ -43,6 +43,7 @@
     <Compile Include="GameLogic.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scoring.cs" />
     <Compile Include="Tile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
