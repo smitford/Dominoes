@@ -103,7 +103,11 @@ namespace Dominoes.AI
 
                         var childNode = Go(mathcTile, parentNode, parentSide, AiTiles);
                         var childSide = GameMoves.GetMatchSide(parentNode, childNode, parentSide);
-                        Scoring.CheckGameState(GameMoves, TileBase, PlayerTiles, AiTiles);
+
+                        if (Scoring.CheckGameState(GameMoves, TileBase, PlayerTiles, AiTiles))
+                        {
+                            return;
+                        }
 
                         if (AImovesEnent != null)
                         {
@@ -189,6 +193,7 @@ namespace Dominoes.AI
             AiTiles.Clear();
             movesCount = 0;
             GameMoves = new Moves();
+            Scoring = new Scoring();
         }
     }
 }

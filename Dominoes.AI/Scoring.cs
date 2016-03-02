@@ -8,17 +8,19 @@ namespace Dominoes.AI
 {
     public class Scoring
     {
-        public delegate void GameOverHandler(bool playerWin, int scores);
+        public delegate void GameOverHandler(int playerScores, int aiScores);
         public event GameOverHandler GameOver;
 
-        public void CheckGameState(Moves moves, List<Tile> tileBase, List<Tile> playerTiles, List<Tile> aiTiles)
+        public bool CheckGameState(Moves moves, List<Tile> tileBase, List<Tile> playerTiles, List<Tile> aiTiles)
         {
             if (playerTiles.Count == 0)
             {
                 var scores = CountScores(aiTiles);
                 if (GameOver != null)
                 {
-                    GameOver(true, scores);
+                    GameOver(scores, 0);
+                    return true;
+
                 }
             }
             else if (aiTiles.Count == 0)
@@ -26,7 +28,9 @@ namespace Dominoes.AI
                 var scores = CountScores(playerTiles);
                 if (GameOver != null)
                 {
-                    GameOver(false, scores);
+                    GameOver(0, scores);
+                    return true;
+
                 }
             }
             else if ((tileBase.Count == 0 && (moves.Leaves.Select(x => x.CurrentTile).Where(x => playerTiles.Select(y => y.TopEnd).Contains(x.TopEnd)).Count() == 0 ||
@@ -40,14 +44,16 @@ namespace Dominoes.AI
                      moves.Leaves.Select(x => x.CurrentTile).Where(x => aiTiles.Select(y => y.BottomEnd).Contains(x.BottomEnd)).Count() == 0))
                      )
             {
-                var playerScores = CountScores(playerTiles);
-                var aiScores = CountScores(aiTiles);
-                var scores = playerScores - aiScores;
+                var playerScores = CountScores(aiTiles);
+                var aiScores = CountScores(playerTiles);
                 if (GameOver != null)
                 {
-                    GameOver(scores > 0, scores);
+                    GameOver(playerScores, aiScores);
+                    return true;
                 }
             }
+            return false;
+
         }
 
         public int CountScores(List<Tile> tiles)
