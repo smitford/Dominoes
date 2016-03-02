@@ -8,7 +8,7 @@ namespace Dominoes.AI
 {
     public class GameLogic
     {
-        public delegate void NewMoveHandler (Node parentNode, Node childNode);
+        public delegate void NewMoveHandler(Node parentNode, Node childNode, Side parentSide, Side childSide);
         public event NewMoveHandler AImovesEnent;
         public event NewMoveHandler PlayerMovesEnent;
 
@@ -20,28 +20,110 @@ namespace Dominoes.AI
         public bool IsPlayerTurn { get; private set; }
         public Moves GameMoves { get; private set; }
         private int movesCount = 0;
-        private Scoring _scoring;
+        public Scoring Scoring { get; private set; }
 
         public Node PlayerMoves(Tile tile, Node node, Side tileSide)
         {
             if (IsPlayerTurn)
             {
-                return Go(tile, node, tileSide, PlayerTiles);
+                var n = Go(tile, node, tileSide, PlayerTiles);
+                Scoring.CheckGameState(GameMoves, TileBase, PlayerTiles, AiTiles);
+                return n;
             }
-            else { throw new Exception("Is not player's turn");}
+            else { throw new Exception("Is not player's turn"); }
+        }
+
+        public void AIMoves()
+        {
+            if (!IsPlayerTurn)
+            {
+                var leaves = GameMoves.Leaves;
+                var freeSides = new List<KeyValuePair<Side, Node>>();
+                foreach (var leaf in leaves)
+                {
+                    freeSides.AddRange(leaf.AvailableNeighbourNodes.Where(x =>
+                    (x.Key == Side.Top || x.Key == Side.Bottom) ||
+                    (x.Key == Side.Right && leaf.CurrentTile.IsDouble())
+                    ));
+                }
+                //AiTiles.First(x => freeSides.Find(y => y.));
+                foreach (var aiTile in AiTiles)
+                {
+
+                    var parentNode = leaves.Find(l =>
+                                     l.CurrentTile.TopEnd == aiTile.TopEnd ||
+                                     l.CurrentTile.TopEnd == aiTile.BottomEnd ||
+                                     l.CurrentTile.BottomEnd == aiTile.TopEnd ||
+                                     l.CurrentTile.BottomEnd == aiTile.BottomEnd);
+                    if (parentNode != null)
+                    {
+                        var mathcTile = aiTile;
+                        Side parentSide = Side.Top;
+                        if (parentNode.CurrentTile.IsDouble())
+                        {
+                            if (parentNode.AvailableNeighbourNodes.Find(x => x.Key == Side.Right).Value == null)
+                            {
+                                parentSide = Side.Right;
+                            }
+                            else if (parentNode.AvailableNeighbourNodes.Find(x => x.Key == Side.Left).Value == null)
+                            {
+                                parentSide = Side.Left;
+                            }
+                        }
+                        else if (!parentNode.CurrentTile.IsDouble())
+                        {
+                            if (parentNode.AvailableNeighbourNodes.Find(x => x.Key == Side.Top).Value == null)
+                            {
+                                parentSide = Side.Top;
+                            }
+                            if (parentNode.AvailableNeighbourNodes.Find(x => x.Key == Side.Bottom).Value == null)
+                            {
+                                parentSide = Side.Bottom;
+                            }
+                        }
+
+                        var freeNodesNOTAvailable =
+                            (GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.TopEnd)).Count() == 0 &&
+                             GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.BottomEnd)).Count() == 0 &&
+                             GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.TopEnd)).Count() == 0 &&
+                             GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.BottomEnd)).Count() == 0);
+                        if (TileBase.Count > 0 && freeNodesNOTAvailable)
+                        {
+                            while (freeNodesNOTAvailable)
+                            {
+                                AiTiles.Add(Tile.PickTileFromBase(TileBase));
+                                freeNodesNOTAvailable =
+                                                         (GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.TopEnd)).Count() == 0 &&
+                                                          GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.BottomEnd)).Count() == 0 &&
+                                                          GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.TopEnd)).Count() == 0 &&
+                                                          GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.BottomEnd)).Count() == 0);
+                            }
+                        }
+                        Scoring.CheckGameState(GameMoves, TileBase, PlayerTiles, AiTiles);
+
+                        var childNode = Go(mathcTile, parentNode, parentSide, AiTiles);
+                        var childSide = GameMoves.GetMatchSide(parentNode, childNode, parentSide);
+                        Scoring.CheckGameState(GameMoves, TileBase, PlayerTiles, AiTiles);
+
+                        if (AImovesEnent != null)
+                        {
+                            AImovesEnent(parentNode, childNode, parentSide, childSide);
+                        }
+                        return;
+                    }
+                }
+            }
+            else { throw new Exception("Is not player's turn"); }
         }
 
         private Node Go(Tile tile, Node parentNode, Side tileSide, List<Tile> tiles)
         {
             var newMove = GameMoves.NewMove(tile, parentNode, tileSide);
             tiles.Remove(tile);
-            if (!IsPlayerTurn && AImovesEnent != null)
+
+            if (IsPlayerTurn && PlayerMovesEnent != null)
             {
-                AImovesEnent(parentNode, newMove);
-            }
-            else if (IsPlayerTurn && PlayerMovesEnent != null)
-            {
-                PlayerMovesEnent(parentNode, newMove);
+                //PlayerMovesEnent(parentNode, newMove);
             }
             IsPlayerTurn = !IsPlayerTurn;
             movesCount++;
@@ -52,18 +134,8 @@ namespace Dominoes.AI
         {
             var newMove = GameMoves.FirstMove(tile);
             tiles.Remove(tile);
-            if (!IsPlayerTurn && AImovesEnent != null)
-            {
-                AImovesEnent(null, newMove);
-            }
-            else if (IsPlayerTurn && PlayerMovesEnent != null)
-            {
-                PlayerMovesEnent(null, newMove);
-            }
             IsPlayerTurn = !IsPlayerTurn;
             movesCount++;
-
-            _scoring.CheckGameState(GameMoves, PlayerTiles, AiTiles);
         }
 
         public GameLogic()
@@ -71,7 +143,7 @@ namespace Dominoes.AI
             TileBase = new List<Tile>();
             PlayerTiles = new List<Tile>();
             AiTiles = new List<Tile>();
-            _scoring = new Scoring();
+            Scoring = new Scoring();
             GameMoves = new Moves();
         }
 

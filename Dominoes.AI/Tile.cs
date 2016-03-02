@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Dominoes.AI
 {
+    [DebuggerDisplay("{TopEnd} || {BottomEnd}")]
     public class Tile : IComparable
     {
         public Tile() { }
@@ -98,7 +100,7 @@ namespace Dominoes.AI
         
         public static Tile PickTileFromBase(List<Tile> tileBase)
         {
-            var tile = tileBase[new Random().Next(tileBase.Count)];
+            var tile = tileBase[0];
             tileBase.Remove(tile);
             return tile;
         }

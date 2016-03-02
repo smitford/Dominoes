@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace Dominoes.AI
 
     }
 
+    [DebuggerDisplay("{CurrentTile.TopEnd} || {CurrentTile.BottomEnd}")]
     public class Node
     {
         public Node TopNode { get; set; }
