@@ -46,15 +46,15 @@ namespace Dominoes.AI
                     (x.Key == Side.Right && leaf.CurrentTile.IsDouble())
                     ));
                 }
-                //AiTiles.First(x => freeSides.Find(y => y.));
                 foreach (var aiTile in AiTiles)
                 {
 
                     var parentNode = leaves.Find(l =>
-                                     l.CurrentTile.TopEnd == aiTile.TopEnd ||
-                                     l.CurrentTile.TopEnd == aiTile.BottomEnd ||
-                                     l.CurrentTile.BottomEnd == aiTile.TopEnd ||
-                                     l.CurrentTile.BottomEnd == aiTile.BottomEnd);
+                                     ((l.CurrentTile.TopEnd == aiTile.TopEnd ||
+                                     l.CurrentTile.TopEnd == aiTile.BottomEnd ) && l.TopNode == null ) ||
+                                     ((l.CurrentTile.BottomEnd == aiTile.TopEnd ||
+                                     l.CurrentTile.BottomEnd == aiTile.BottomEnd) && l.BottomNode == null)
+                                     );
                     if (parentNode != null)
                     {
                         var mathcTile = aiTile;
