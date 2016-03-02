@@ -116,8 +116,10 @@ namespace Dominoes.AI
                         return;
                     }
                 }
+                AiTiles.Add(Tile.PickTileFromBase(TileBase));
+                AIMoves();
             }
-            else { throw new Exception("Is not player's turn"); }
+            else { throw new Exception("Is player's turn"); }
         }
 
         private Node Go(Tile tile, Node parentNode, Side tileSide, List<Tile> tiles)
@@ -157,13 +159,11 @@ namespace Dominoes.AI
             PlayerTiles.AddRange(Tile.DealTiles(TileBase));
             AiTiles.AddRange(Tile.DealTiles(TileBase));
 
-            if (Tile.MinimalTile(AiTiles) == null && Tile.MinimalTile(PlayerTiles) == null)
+            while (Tile.MinimalTile(AiTiles) == null && Tile.MinimalTile(PlayerTiles) == null)
             {
-                ResetGame();
-                InitGame();
-                return;
+                AiTiles.Add(Tile.PickTileFromBase(TileBase));
             }
-            else if (Tile.MinimalTile(AiTiles) == null)
+            if (Tile.MinimalTile(AiTiles) == null)
             {
                 IsPlayerTurn = true;
             }
@@ -178,6 +178,7 @@ namespace Dominoes.AI
 
             if (IsPlayerTurn)
             {
+
                 Go(Tile.MinimalTile(PlayerTiles), PlayerTiles);
             }
             else
