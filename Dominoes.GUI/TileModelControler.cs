@@ -49,15 +49,16 @@ namespace Dominoes.GUI
             return tileModel;
         }
 
-        public void AddTileToGame(Node node, Point point, Side parentTileSide, Side childTileSide)
+        public TileModel AddTileToGame(Node node, Point point, Side parentTileSide, Side childTileSide)
         {
+            
             TileModel tileModel = new TileModel();
             SetTileParameters(tileModel,node, point, parentTileSide, childTileSide);
 
             _parentGrid.Children.Add(tileModel);
             GameTableTileModels.Add(tileModel);
             //_parentGrid.Children.Add(new Ellipse { Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0), Fill = Brushes.Aqua, Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left });
-
+            return tileModel;
         }
 
         public void AddTileToUserBase(Tile tile, Point point)

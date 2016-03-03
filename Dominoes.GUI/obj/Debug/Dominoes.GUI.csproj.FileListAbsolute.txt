@@ -17,5 +17,3 @@ C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.exe
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.pdb
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\TileModel.g.cs
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\TileModel.baml
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\AimModel.g.cs
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\AimModel.baml
