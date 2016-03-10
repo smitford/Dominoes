@@ -17,3 +17,13 @@ C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.exe
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\Dominoes.GUI.pdb
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\TileModel.g.cs
 C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\TileModel.baml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\LoginDialog.g.cs
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.DB.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\EntityFramework.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\Dominoes.DB.pdb
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\EntityFramework.xml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\LoginDialog.baml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\GameHistoryWindow.g.cs
+C:\Users\David\Documents\GitHub\Dominoes\Dominoes.GUI\obj\Debug\GameHistoryWindow.baml

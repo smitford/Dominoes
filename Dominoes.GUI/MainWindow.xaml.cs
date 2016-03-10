@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Dominoes.AI;
+using Dominoes.DB;
 using System.Threading;
 
 namespace Dominoes.GUI
@@ -27,6 +28,9 @@ namespace Dominoes.GUI
         Point _centr;
         TileModel _newTile;
         Leaf _nearConnector;
+        String nick;
+        DbConnector _dbconnector;
+
         bool _gameStarted = false;
         public class Leaf
         {
@@ -45,7 +49,7 @@ namespace Dominoes.GUI
         {
             InitializeComponent();
             pickButton.IsEnabled = false;
-            saveButton.IsEnabled = false;
+            _dbconnector = new DbConnector();
         }
 
         private void _scoring_GameOver(int playerScores, int aiScores)
@@ -64,49 +68,61 @@ namespace Dominoes.GUI
             }
             message += "\n";
             message += String.Format("{0} : {1}",playerScores, aiScores);
+            pickButton.IsEnabled = false;
 
             Thread thread = new Thread(new ParameterizedThreadStart(GameOverMessage));
             thread.Start(message);
-            //InitGame();
+
+            _dbconnector.Add(nick, playerWin);
+            var gameHistoryWindow = new GameHistoryWindow();
+            gameHistoryWindow.dataGrid.ItemsSource = _dbconnector.GetHistory();
+            gameHistoryWindow.Show();
         }
 
         void GameOverMessage(object message)
         {
             MessageBox.Show((string)message);
+            
+            
         }
 
         private void InitGame()
         {
-            _gameLogic.ResetGame();
-
-            _gameStarted = true;
-            this.MouseMove += Window_MouseMove;
-            Background.MouseDown += Background_MouseDown;
-            _centr = new Point(Width / 2, Height / 2 - Background.Margin.Top-100);
-            _tileModelControler = new TileModelControler(Background);
-            _tileModelControler.TilePicked += _tileModelControler_TilePicked;
-            _gameLogic.AImovesEnent += _gameLogic_AImovesEnent;
-            _gameLogic.PlayerMovesEnent += _gameLogic_PlayerMovesEnent; ;
-            _gameLogic.InitGame();
-
-            Background.Children.Clear();
-            _tileModelControler.GameTableTileModels.Clear();
-            _tileModelControler.UserBaseTileModels.Clear();
-
-            DrawGame();
-            HelperInit();
-            ShowUserTilles(_gameLogic.PlayerTiles);
-            if (_gameLogic.TileBase.Count > 0)
+            var loginDialog = new LoginDialog();
+            if (loginDialog.ShowDialog() == true)
             {
-                pickButton.IsEnabled = true;
+                nick = loginDialog.ResponseText;
+                helloLabel.Content = "Hello, " + nick + "!";
+                _gameLogic.ResetGame();
+                _gameStarted = true;
+                this.MouseMove += Window_MouseMove;
+                Background.MouseDown += Background_MouseDown;
+                _centr = new Point(Width / 2, Height / 2 - Background.Margin.Top - 100);
+                _tileModelControler = new TileModelControler(Background);
+                _tileModelControler.TilePicked += _tileModelControler_TilePicked;
+                _gameLogic.AImovesEnent += _gameLogic_AImovesEnent;
+                _gameLogic.PlayerMovesEnent += _gameLogic_PlayerMovesEnent; ;
+                _gameLogic.InitGame();
+
+                Background.Children.Clear();
+                _tileModelControler.GameTableTileModels.Clear();
+                _tileModelControler.UserBaseTileModels.Clear();
+
+                DrawGame();
+                HelperInit();
+                ShowUserTilles(_gameLogic.PlayerTiles);
+                if (_gameLogic.TileBase.Count > 0)
+                {
+                    pickButton.IsEnabled = true;
+                }
+                if (!_gameLogic.IsPlayerTurn)
+                {
+                    _gameLogic.AIMoves();
+                }
+                _gameLogic.Scoring.GameOver += _scoring_GameOver;
+                AiTilesCountLabel.Content = _gameLogic.AiTiles.Count;
+                StockTileCountLable.Content = _gameLogic.TileBase.Count;
             }
-            if (!_gameLogic.IsPlayerTurn)
-            {
-                _gameLogic.AIMoves();
-            }
-            _gameLogic.Scoring.GameOver += _scoring_GameOver;
-            AiTilesCountLabel.Content = _gameLogic.AiTiles.Count;
-            StockTileCountLable.Content = _gameLogic.TileBase.Count;
         }
 
         private void _gameLogic_PlayerMovesEnent(Node parentNode, Node childNode, Side parentSide, Side childSide)
@@ -128,11 +144,6 @@ namespace Dominoes.GUI
         {
             startButton.Content = "Restart game";
             InitGame();
-        }
-
-        private void saveButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void pickButton_Click(object sender, RoutedEventArgs e)
