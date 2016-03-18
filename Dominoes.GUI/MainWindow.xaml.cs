@@ -23,6 +23,7 @@ namespace Dominoes.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+
         TileModelControler _tileModelControler;
         GameLogic _gameLogic = new GameLogic();
         Point _centr;
@@ -52,6 +53,12 @@ namespace Dominoes.GUI
             _dbconnector = new DbConnector();
         }
 
+        /// <summary>
+        /// Executes at game over.
+        /// Count scores.
+        /// </summary>
+        /// <param name="playerScores">Player scores</param>
+        /// <param name="aiScores">AI scores</param>
         private void _scoring_GameOver(int playerScores, int aiScores)
         {
             _gameStarted = false;
@@ -79,6 +86,10 @@ namespace Dominoes.GUI
             gameHistoryWindow.Show();
         }
 
+        /// <summary>
+        /// Executes at game over
+        /// </summary>
+        /// <param name="message"></param>
         void GameOverMessage(object message)
         {
             MessageBox.Show((string)message);
@@ -86,6 +97,9 @@ namespace Dominoes.GUI
             
         }
 
+        /// <summary>
+        /// Initialize the game
+        /// </summary>
         private void InitGame()
         {
             var loginDialog = new LoginDialog();
@@ -101,7 +115,7 @@ namespace Dominoes.GUI
                 _tileModelControler = new TileModelControler(Background);
                 _tileModelControler.TilePicked += _tileModelControler_TilePicked;
                 _gameLogic.AImovesEnent += _gameLogic_AImovesEnent;
-                _gameLogic.PlayerMovesEnent += _gameLogic_PlayerMovesEnent; ;
+                _gameLogic.PlayerMovesEnent += _gameLogic_PlayerMovesEnent; 
                 _gameLogic.InitGame();
 
                 Background.Children.Clear();
@@ -125,6 +139,13 @@ namespace Dominoes.GUI
             }
         }
 
+        /// <summary>
+        /// Executes when game logic goes instead of user
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="childNode">Child node</param>
+        /// <param name="parentSide">Parent tile side</param>
+        /// <param name="childSide">Child tile side</param>
         private void _gameLogic_PlayerMovesEnent(Node parentNode, Node childNode, Side parentSide, Side childSide)
         {
             var b = _tileModelControler.GameTableTileModels.Find(x => x.CurrentNode == parentNode).Angle;
@@ -132,6 +153,13 @@ namespace Dominoes.GUI
             AddNewMove(childNode, parentNode, parentSide, childSide);
         }
 
+        /// <summary>
+        /// Executes when game logic goes instead of PC
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="childNode">Child node</param>
+        /// <param name="parentSide">Parent tile side</param>
+        /// <param name="childSide">Child tile side</param>
         private void _gameLogic_AImovesEnent(Node parentNode, Node childNode, Side parentSide, Side childSide)
         {
             Thread.Sleep(100);  //delay before move
@@ -140,12 +168,24 @@ namespace Dominoes.GUI
             AddNewMove(childNode, parentNode, parentSide , childSide);
         }
 
+        /// <summary>
+        /// Executes when start button clicked.
+        /// Game starts or restarts.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
             startButton.Content = "Restart game";
             InitGame();
         }
 
+        /// <summary>
+        /// Executes when start pick clicked.
+        /// Picks to new tile to user base.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pickButton_Click(object sender, RoutedEventArgs e)
         {
             foreach (var item in _tileModelControler.UserBaseTileModels)
@@ -166,6 +206,13 @@ namespace Dominoes.GUI
             StockTileCountLable.Content = _gameLogic.TileBase.Count;
         }
 
+        /// <summary>
+        /// Processes new move. Adds it to game logic and UI
+        /// </summary>
+        /// <param name="currNode">New node</param>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="parentTileSide">Parent tile side</param>
+        /// <param name="childTileSide">Child tile side</param>
         private void AddNewMove(Node currNode, Node parentNode, Side parentTileSide, Side childTileSide)
         {
             try {
@@ -187,11 +234,19 @@ namespace Dominoes.GUI
             catch { }
         }
 
+        /// <summary>
+        /// Executes at click on tile from base
+        /// </summary>
+        /// <param name="node"></param>
         private void _tileModelControler_TilePicked(Node node)
         {
             _newTile.CurrentNode = node;
         }
 
+        /// <summary>
+        /// Shows user tile in UI
+        /// </summary>
+        /// <param name="playerTiles"></param>
         private void ShowUserTilles(List<Tile> playerTiles)
         {
             for (int i = 0; i < playerTiles.Count; i++)
@@ -202,6 +257,9 @@ namespace Dominoes.GUI
             }
         }
 
+        /// <summary>
+        /// Draws dominoes at start
+        /// </summary>
         private void DrawGame()
         {
             var moves = _gameLogic.GameMoves;
@@ -226,6 +284,11 @@ namespace Dominoes.GUI
 
         }
 
+        /// <summary>
+        /// Recursion method that finds nodes and place dominoes
+        /// </summary>
+        /// <param name="neighbourNodes">List of neighbour nodes</param>
+        /// <param name="parentNode">Parent node</param>
         private void DrawingRecursion(List<KeyValuePair<Side, Node>> neighbourNodes, Node parentNode)
         {
 
@@ -249,6 +312,11 @@ namespace Dominoes.GUI
             }
         }
 
+        /// <summary>
+        /// Executes at mouse click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (_gameLogic.IsPlayerTurn)
@@ -285,6 +353,11 @@ namespace Dominoes.GUI
             }
         }
 
+        /// <summary>
+        /// Executes at mouse move
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             var mouse = new Point(Mouse.GetPosition(Application.Current.MainWindow).X - Background.Margin.Left, Mouse.GetPosition(Application.Current.MainWindow).Y - Background.Margin.Top);
@@ -295,6 +368,11 @@ namespace Dominoes.GUI
             }
         }
 
+        /// <summary>
+        /// Returns leaves with free sides.
+        /// </summary>
+        /// <param name="leaves">Nodes with free sides</param>
+        /// <returns>List with information about available connecting points</returns>
         private List<Leaf> GetLeavesConnectors(List<Node> leaves)
         {
             var leavesConnectors = new List<Leaf>();
@@ -319,15 +397,22 @@ namespace Dominoes.GUI
             return leavesConnectors;
         }
 
+        /// <summary>
+        /// Initialization of helper tile binded to mouse
+        /// </summary>
         private void HelperInit()
         {
             _newTile = new TileModel { VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
-            //_newTile.CurrentNode = new Node { CurrentTile = new Tile(2, 1) };
             _newTile.Visibility = Visibility.Hidden;
             _newTile.Rect.Fill = Brushes.Red;
             Background.Children.Add(_newTile);
         }
 
+        /// <summary>
+        /// Finds available points to connect new tile
+        /// </summary>
+        /// <param name="mouse">Current mouse coordinates</param>
+        /// <param name="tile">New tile</param>
         private void HelpToConnect(Point mouse, Tile tile)
         {
             if (_gameLogic.IsPlayerTurn)
@@ -335,7 +420,6 @@ namespace Dominoes.GUI
                 var connectors = GetLeavesConnectors(_gameLogic.GameMoves.Leaves).Where(x =>
                 x.ConnectorTileModel.CurrentNode.CurrentTile.GetSideValue(x.ConnectorSide) == tile.TopEnd ||
                 x.ConnectorTileModel.CurrentNode.CurrentTile.GetSideValue(x.ConnectorSide) == tile.BottomEnd).ToList();
-
 
                 foreach (var item in connectors)
                 {
@@ -359,9 +443,9 @@ namespace Dominoes.GUI
                         var parentTileSide = _nearConnector.ConnectorSide;
                         var childTileSide = _gameLogic.GameMoves.GetMatchSide(_nearConnector.ConnectorTileModel.CurrentNode, childNodde, parentTileSide);
                         int angle = (2 + _nearConnector.ConnectorTileModel.Angle - ((int)parentTileSide) + ((int)childTileSide)) % 4;
-                        var offset = _newTile.ConnectorOffset(childTileSide);
-                        point.X = point.X + offset.X;
-                        point.Y = point.Y + offset.Y;
+                        var offset = _newTile.OffsetVector(childTileSide);
+                        point.X = point.X - offset.X;
+                        point.Y = point.Y - offset.Y;
                         _newTile.Angle = angle;
                         _newTile.Center = point;
                         _newTile.Visibility = Visibility.Visible;

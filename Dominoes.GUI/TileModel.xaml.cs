@@ -38,21 +38,27 @@ namespace Dominoes.GUI
         }
 
         private int _angle;
+
+        /// <summary>
+        /// Rotation angle
+        /// </summary>
         public int Angle
         {
             get { return _angle; }
             set
             {
                 _angle = value%4;
-                this.RenderTransform = new RotateTransform((360 - _angle * (-90)) % 360, TileWidth / 2, TileHeight / 2);
+                this.RenderTransform = new RotateTransform((360 + _angle * 90) % 360, TileWidth / 2, TileHeight / 2);
             }
-        }
+        } 
 
+        /// <summary>
+        /// Coordinates of center
+        /// </summary>
         public Point Center
         {
             set
             {
-                var connectingSide =(Side)( (4+(Angle/90)) % 4);
                 var x = (TileWidth / 2 * Math.Cos(Angle / 180 * Math.PI) - TileHeight / 2 * Math.Sin(Angle / 180 * Math.PI));
                 var y = (TileWidth / 2 * Math.Sin(Angle / 180 * Math.PI) + TileHeight / 2 * Math.Cos(Angle / 180 * Math.PI));
 
@@ -80,13 +86,18 @@ namespace Dominoes.GUI
             this.HorizontalAlignment = HorizontalAlignment.Left;
         }
 
-        public Point SideCoords(Side tileSide)
+        /// <summary>
+        /// Side coorinates on the tile side
+        /// </summary>
+        /// <param name="tileSide">Current tile side</param>
+        /// <returns>Point</returns>
+        public Point SideCoords(Side tileSide) 
         {
-            Point bias = OffsetCoords(tileSide);
+            Point bias = OffsetVector(tileSide);
             return new Point(Center.X + bias.X, Center.Y + bias.Y);
         }
 
-        public Point OffsetCoords(Side tileSide)
+        public Point OffsetVector(Side tileSide) 
         {
             Point bias = new Point(0, 0);
             double x = 0;
@@ -115,45 +126,26 @@ namespace Dominoes.GUI
             return bias;
         }
 
+        /// <summary>
+        /// Side coorinates on the cardinal direction
+        /// </summary>
+        /// <param name="tileSide">Current tile side</param>
+        /// <returns>Point</returns>
         public Point Connector(Side tileSide)
         {
             var b = Angle;
             var side = (Side)(((int)tileSide + b) % 4);
-            var point = ConnectorOffset(side);
+            var point = OffsetVector(side);
 
-            return new Point(Center.X - point.X, Center.Y - point.Y);
+            return new Point(Center.X + point.X, Center.Y + point.Y);
         }
 
-        public Point ConnectorOffset(Side tileSide)
-        {
-            var side = tileSide;// (Side)(((int)tileSide) % 4);
-            double x = 0;
-            double y = 0;
-
-            if (tileSide != Side.Center)
-            {
-                switch (tileSide)
-                {
-                    case Side.Top:
-                        y += TileHeight / 2;
-                        break;
-                    case Side.Bottom:
-                        y -= TileHeight / 2;
-                        break;
-                    case Side.Left:
-                        x += TileWidth / 2;
-                        break;
-                    case Side.Right:
-                        x -= TileWidth / 2;
-                        break;
-                }
-            }
-            var offset = new Point(x, y);
-
-            var point = Rotate(offset, (360+Angle*90)%360);
-                return new Point(point.X, point.Y);
-        }
-
+        /// <summary>
+        /// Rotates vector
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
         private Point Rotate(Point point, double angle)
         {
             var cos = Math.Cos(Math.PI * (angle / 180));
@@ -161,6 +153,10 @@ namespace Dominoes.GUI
             return new Point(point.X * cos - point.Y * sin, point.X * sin + point.Y * cos); 
         }
 
+        /// <summary>
+        /// Sets tile dots
+        /// </summary>
+        /// <param name="tile"></param>
         private void SetTileSideDots(Tile tile)
         {
             dot1_1.Visibility = Visibility.Hidden;

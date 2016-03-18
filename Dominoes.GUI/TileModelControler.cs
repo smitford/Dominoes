@@ -11,6 +11,9 @@ using System.Windows.Shapes;
 
 namespace Dominoes.GUI
 {
+    /// <summary>
+    /// Control tiles in interface
+    /// </summary>
     class TileModelControler
     {
         private Grid _parentGrid;
@@ -31,7 +34,7 @@ namespace Dominoes.GUI
             tileHeight = (new TileModel()).Tile.Height;
         }
 
-        public TileModel SetTileParameters(TileModel tileModel, Node node, Point point, Side parentTileSide, Side childTileSide)
+        private TileModel SetTileParameters(TileModel tileModel, Node node, Point point, Side parentTileSide, Side childTileSide)
         {
             tileModel.CurrentNode = node;
             int angle = 0;
@@ -41,9 +44,9 @@ namespace Dominoes.GUI
             }
             tileModel.Angle = angle%4;
 
-            var offset = tileModel.ConnectorOffset(childTileSide);
-            point.X = point.X + offset.X;
-            point.Y = point.Y + offset.Y;
+            var offset = tileModel.OffsetVector(childTileSide);
+            point.X = point.X - offset.X;
+            point.Y = point.Y - offset.Y;
             tileModel.Center = point;
             
             return tileModel;
