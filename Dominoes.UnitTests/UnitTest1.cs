@@ -26,40 +26,20 @@ namespace Dominoes.UnitTests
         [TestMethod]
         public void DominoesDataStructureTest()
         {
-            var tiles = GenerateTiles();
             var moves = new Moves();
-            var tile = new Tile();
 
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var root = moves.FirstMove(tile);
+            var root = moves.FirstMove(new Tile(1,1));
 
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var node_0 = moves.NewMove(tile, root, Side.Top);
+            var node_0 = moves.NewMove(new Tile(1, 2), root, Side.Top);
+            var node_1 = moves.NewMove(new Tile(3, 1), root, Side.Bottom);
+            var node_2 = moves.NewMove(new Tile(4, 1), root, Side.Left);
+            var node_0_0 = moves.NewMove(new Tile(2, 5), node_0, Side.Bottom);
+            var node_3 = moves.NewMove(new Tile(6, 1), root, Side.Right);
 
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var node_1 = moves.NewMove(tile, root, Side.Bottom);
-
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var node_2 = moves.NewMove(tile, root, Side.Bottom);
-
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var node_0_0 = moves.NewMove(tile, node_0, Side.Top);
-
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var node_0_2 = moves.NewMove(tile, node_0, Side.Bottom);
-
-            tile = tiles[new Random().Next(tiles.Count)];
-            tiles.Remove(tile);
-            var node_2_3 = moves.NewMove(tile, node_2, Side.Right);
+            var node_2_3 = moves.NewMove(new Tile(2, 4), node_2, Side.Bottom);
 
             var leaves = moves.Leaves;
-            Assert.IsTrue(leaves.Contains(node_1) && leaves.Contains(node_0_0) && leaves.Contains(node_0_2) && leaves.Contains(node_2_3) && leaves.Count == 4);
+            Assert.IsTrue(leaves.Contains(node_1) && leaves.Contains(node_3) && leaves.Contains(node_0_0) && leaves.Contains(node_2_3) && leaves.Count == 4);
         }
 
         private List<Tile> GenerateTiles()

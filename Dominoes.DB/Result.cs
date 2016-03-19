@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Dominoes.DB
 {
-    public class Result
+    /// <summary>
+    /// Game hisory results table 
+    /// </summary>
+    public class Result 
     {
         public Result(string nick, bool win)
         {
@@ -17,9 +20,10 @@ namespace Dominoes.DB
         {
 
         }
-        public int Id { get; private set; }
-        public string Nick { get; private set; }
-        public bool Win { get; private set; }
+
+        public int Id { get; private set; } // ID
+        public string Nick { get; private set; } // Nick name
+        public bool Win { get; private set; } // If player won
 
     }
 }

@@ -21,6 +21,7 @@ namespace Dominoes.DB
             _history.SaveChanges();
             return result;
         }
+
         public bool Remove(Result result)
         {
             try
@@ -34,6 +35,7 @@ namespace Dominoes.DB
                 return false;
             }
         }
+
         public List<Result> GetHistory()
         {
             return _history.Results.ToList<Result>();

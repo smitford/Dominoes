@@ -4,6 +4,9 @@ namespace Dominoes.DB
     using System.Data.Entity;
     using System.Linq;
 
+    /// <summary>
+    /// Game history database
+    /// </summary>
     public class HistoryDb : DbContext
     {
         // Your context has been configured to use a 'History' connection string from your application's 
@@ -16,7 +19,7 @@ namespace Dominoes.DB
             : base("data source=(LocalDb)\\MSSQLLocalDB;initial catalog=Dominoes.DB.History;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework")
         {
         }
-        public virtual DbSet<Result> Results { get; set; }
+        public virtual DbSet<Result> Results { get; set; } // Add table to db
         // Add a DbSet for each entity type that you want to include in your model. For more information 
         // on configuring and using a Code First model, see http://go.microsoft.com/fwlink/?LinkId=390109.
 
