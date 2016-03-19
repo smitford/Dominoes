@@ -71,8 +71,10 @@ namespace Dominoes.AI
                     {
                         summ += 50;
                     }
-                    summ += tile.TopEnd + tile.BottomEnd;
-
+                    else
+                    {
+                        summ += tile.TopEnd + tile.BottomEnd;
+                    }
                 }
                 else
                 {

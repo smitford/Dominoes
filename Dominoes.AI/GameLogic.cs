@@ -9,14 +9,26 @@ namespace Dominoes.AI
     public class GameLogic
     {
         public delegate void NewMoveHandler(Node parentNode, Node childNode, Side parentSide, Side childSide);
+
+
         public event NewMoveHandler AImovesEnent;
         public event NewMoveHandler PlayerMovesEnent;
 
+        /// <summary>
+        /// List of tiles in the stock
+        /// </summary>
         public List<Tile> TileBase { get; private set; }
+
+        /// <summary>
+        /// List of player's tiles
+        /// </summary>
         public List<Tile> PlayerTiles { get; private set; }
+
+        /// <summary>
+        /// List of player's tiles
+        /// </summary>
         public List<Tile> AiTiles { get; private set; }
 
-        public List<Tile> PlayerTile { get { return PlayerTiles; } }
         public bool IsPlayerTurn { get; private set; }
         public Moves GameMoves { get; private set; }
         private int movesCount = 0;
@@ -58,14 +70,14 @@ namespace Dominoes.AI
                     if (parentNode != null)
                     {
                         var mathcTile = aiTile;
-                        Side parentSide = Side.Top;
+                        Side parentSide = Side.Top; //Just for init
                         if (parentNode.CurrentTile.IsDouble())
                         {
-                            if (parentNode.AvailableNeighbourNodes.Find(x => x.Key == Side.Right).Value == null)
+                            if (parentNode.NeighbourNodes.Find(x => x.Key == Side.Right).Value == null)
                             {
                                 parentSide = Side.Right;
                             }
-                            else if (parentNode.AvailableNeighbourNodes.Find(x => x.Key == Side.Left).Value == null)
+                            else if (parentNode.NeighbourNodes.Find(x => x.Key == Side.Left).Value == null)
                             {
                                 parentSide = Side.Left;
                             }
@@ -87,17 +99,15 @@ namespace Dominoes.AI
                              GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.BottomEnd)).Count() == 0 &&
                              GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.TopEnd)).Count() == 0 &&
                              GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.BottomEnd)).Count() == 0);
-                        if (TileBase.Count > 0 && freeNodesNOTAvailable)
+
+                        while (TileBase.Count > 0 && freeNodesNOTAvailable)
                         {
-                            while (freeNodesNOTAvailable)
-                            {
-                                AiTiles.Add(Tile.PickTileFromBase(TileBase));
-                                freeNodesNOTAvailable =
-                                                         (GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.TopEnd)).Count() == 0 &&
-                                                          GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.BottomEnd)).Count() == 0 &&
-                                                          GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.TopEnd)).Count() == 0 &&
-                                                          GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.BottomEnd)).Count() == 0);
-                            }
+                            AiTiles.Add(Tile.PickTileFromBase(TileBase));
+                            freeNodesNOTAvailable =
+                                                     (GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.TopEnd)).Count() == 0 &&
+                                                      GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.TopEnd).Contains(x.BottomEnd)).Count() == 0 &&
+                                                      GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.TopEnd)).Count() == 0 &&
+                                                      GameMoves.Leaves.Select(x => x.CurrentTile).Where(x => AiTiles.Select(y => y.BottomEnd).Contains(x.BottomEnd)).Count() == 0);
                         }
                         Scoring.CheckGameState(GameMoves, TileBase, PlayerTiles, AiTiles);
 
@@ -122,21 +132,17 @@ namespace Dominoes.AI
             else { throw new Exception("Is player's turn"); }
         }
 
-        private Node Go(Tile tile, Node parentNode, Side tileSide, List<Tile> tiles)
+        private Node Go(Tile tile, Node parentNode, Side parentTileSide, List<Tile> tiles)
         {
-            var newMove = GameMoves.NewMove(tile, parentNode, tileSide);
+            var newMove = GameMoves.NewMove(tile, parentNode, parentTileSide);
             tiles.Remove(tile);
 
-            if (IsPlayerTurn && PlayerMovesEnent != null)
-            {
-                //PlayerMovesEnent(parentNode, newMove);
-            }
             IsPlayerTurn = !IsPlayerTurn;
             movesCount++;
             return newMove;
         }
 
-        private void Go(Tile tile, List<Tile> tiles)
+        private void FirstGo(Tile tile, List<Tile> tiles)
         {
             var newMove = GameMoves.FirstMove(tile);
             tiles.Remove(tile);
@@ -179,11 +185,11 @@ namespace Dominoes.AI
             if (IsPlayerTurn)
             {
 
-                Go(Tile.MinimalTile(PlayerTiles), PlayerTiles);
+                FirstGo(Tile.MinimalTile(PlayerTiles), PlayerTiles);
             }
             else
             {
-                Go(Tile.MinimalTile(AiTiles), AiTiles);
+                FirstGo(Tile.MinimalTile(AiTiles), AiTiles);
             }
         }
 

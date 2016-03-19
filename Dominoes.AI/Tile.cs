@@ -12,14 +12,20 @@ namespace Dominoes.AI
     {
         public Tile() { }
 
-        public Tile(int topEnd, int bottomEnd)
+        public Tile(int topEnd, int bottomEnd) 
         {
             TopEnd = topEnd;
             BottomEnd = bottomEnd;
         }
 
+        /// <summary>
+        /// Number of dots on top end
+        /// </summary>
         public int TopEnd { get; set; }
 
+        /// <summary>
+        /// Number of dots on bottom end
+        /// </summary>
         public int BottomEnd { get; set; }
 
         public int GetSideValue(Side side)
@@ -39,24 +45,20 @@ namespace Dominoes.AI
             throw new Exception("Not existing end");
         }
 
+        /// <summary>
+        /// If bottom == top, then true
+        /// </summary>
+        /// <returns></returns>
         public bool IsDouble()
         {
             return TopEnd == BottomEnd;
         }
 
-        public static List<Tile> DoubleTiles(List<Tile> tiles)
-        {
-            var doubleTiles = new List<Tile>();
-            foreach (var tile in tiles)
-            {
-                if (tile.IsDouble())
-                {
-                    doubleTiles.Add(tile);
-                }
-            }
-            return doubleTiles;
-        }
-
+        /// <summary>
+        /// Return minimal double from tile list
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static Tile MinimalTile(List<Tile> t)
         {
             List<Tile> tiles = new List<Tile>();
@@ -73,6 +75,10 @@ namespace Dominoes.AI
             }
         }
 
+        /// <summary>
+        /// Generate and shuffle tiles
+        /// </summary>
+        /// <returns></returns>
         public static List<Tile> GenerateTiles()
         {
             var tiles = new List<Tile>();
@@ -98,6 +104,11 @@ namespace Dominoes.AI
             return tiles;
         }
         
+        /// <summary>
+        /// Picks tile from base and remove it from base list
+        /// </summary>
+        /// <param name="tileBase"></param>
+        /// <returns></returns>
         public static Tile PickTileFromBase(List<Tile> tileBase)
         {
             var tile = tileBase[0];
@@ -105,6 +116,11 @@ namespace Dominoes.AI
             return tile;
         }
 
+        /// <summary>
+        /// Deals a list of tiles to user/ai 
+        /// </summary>
+        /// <param name="tileBase"></param>
+        /// <returns></returns>
         public static List<Tile> DealTiles(List<Tile> tileBase)
         {
             var dealTiles = new List<Tile>();

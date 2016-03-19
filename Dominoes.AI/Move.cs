@@ -24,9 +24,11 @@ namespace Dominoes.AI
         Bottom = 2,
         Right = 3,
         Center = 4
-
     }
 
+    /// <summary>
+    /// Node of the tree
+    /// </summary>
     [DebuggerDisplay("{CurrentTile.TopEnd} || {CurrentTile.BottomEnd}")]
     public class Node
     {
@@ -91,37 +93,40 @@ namespace Dominoes.AI
         public Tile CurrentTile { get; set; }
     }
 
-    public class Moves // Linked list
+    /// <summary>
+    /// Tree / Linked list
+    /// </summary>
+    public class Moves
     {
 
         private Node root = null;
 
         public Node First { get { return root; } }
 
+        /// <summary>
+        /// Returns nodes with available sides
+        /// </summary>
         public List<Node> Leaves
         {
             get
             {
-
                 var leaves = new List<Node>();
-                var notLeaves = new List<Node>();
                 if (root == null)
                 {
                     return null;
                 }
 
-                notLeaves.Add(root);
-
                 var neighbourNodes = root.AvailableNeighbourNodes;
                 if (neighbourNodes.Count == 0)
                 {
                     leaves.Add(root);
+                    return leaves;
                 }
-                else
+                if (neighbourNodes.Count <4)
                 {
                     leaves.Add(root);
-                    leaves.AddRange(LeaveSearchingRecursion(neighbourNodes, root));
                 }
+                leaves.AddRange(LeaveSearchingRecursion(neighbourNodes, root));
                 return leaves;
             }
         }
