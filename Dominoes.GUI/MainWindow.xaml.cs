@@ -192,7 +192,7 @@ namespace Dominoes.GUI
             {
                 Background.Children.Remove(item);
             }
-            _gameLogic.PlayerTile.Add(Tile.PickTileFromBase(_gameLogic.TileBase));
+            _gameLogic.PlayerTiles.Add(Tile.PickTileFromBase(_gameLogic.TileBase));
             ShowUserTilles(_gameLogic.PlayerTiles);
             if (_gameLogic.TileBase.Count > 0)
             {
