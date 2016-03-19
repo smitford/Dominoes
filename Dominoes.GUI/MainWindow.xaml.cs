@@ -23,7 +23,6 @@ namespace Dominoes.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-
         TileModelControler _tileModelControler;
         GameLogic _gameLogic = new GameLogic();
         Point _centr;
@@ -31,7 +30,7 @@ namespace Dominoes.GUI
         Leaf _nearConnector;
         String nick;
         DbConnector _dbconnector;
-
+    
         bool _gameStarted = false;
         public class Leaf
         {
@@ -39,11 +38,12 @@ namespace Dominoes.GUI
             {
                 ConnectorSide = connectorSide;
                 ConnectorPoint = connectorPoint;
-                ConnectorTileModel = connectorTileModel;
+                ParentTileModel = connectorTileModel;
             }
+
             public Side ConnectorSide { get; set; }
             public Point ConnectorPoint { get; set; }
-            public TileModel ConnectorTileModel { get; set; }
+            public TileModel ParentTileModel { get; set; }
         }
         
         public MainWindow()
@@ -51,6 +51,7 @@ namespace Dominoes.GUI
             InitializeComponent();
             pickButton.IsEnabled = false;
             _dbconnector = new DbConnector();
+            _centr = new Point(Width / 2, Height / 2 - Background.Margin.Top - 100);
         }
 
         /// <summary>
@@ -93,8 +94,6 @@ namespace Dominoes.GUI
         void GameOverMessage(object message)
         {
             MessageBox.Show((string)message);
-            
-            
         }
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace Dominoes.GUI
                 _gameStarted = true;
                 this.MouseMove += Window_MouseMove;
                 Background.MouseDown += Background_MouseDown;
-                _centr = new Point(Width / 2, Height / 2 - Background.Margin.Top - 100);
+                
                 _tileModelControler = new TileModelControler(Background);
                 _tileModelControler.TilePicked += _tileModelControler_TilePicked;
                 _gameLogic.AImovesEnent += _gameLogic_AImovesEnent;
@@ -125,6 +124,7 @@ namespace Dominoes.GUI
                 DrawGame();
                 HelperInit();
                 ShowUserTilles(_gameLogic.PlayerTiles);
+
                 if (_gameLogic.TileBase.Count > 0)
                 {
                     pickButton.IsEnabled = true;
@@ -133,6 +133,7 @@ namespace Dominoes.GUI
                 {
                     _gameLogic.AIMoves();
                 }
+
                 _gameLogic.Scoring.GameOver += _scoring_GameOver;
                 AiTilesCountLabel.Content = _gameLogic.AiTiles.Count;
                 StockTileCountLable.Content = _gameLogic.TileBase.Count;
@@ -219,7 +220,7 @@ namespace Dominoes.GUI
                 var point = _tileModelControler.GameTableTileModels.Find(x => x.CurrentNode == parentNode).Connector(parentTileSide);
 
                 var t = _tileModelControler.AddTileToGame(currNode, point, parentTileSide, childTileSide);
-                if (_gameLogic.IsPlayerTurn)
+                if (_gameLogic.IsPlayerTurn) // if not player's turn
                 {
                     t.Rect.Fill = Brushes.DarkGreen;
                 }
@@ -251,9 +252,8 @@ namespace Dominoes.GUI
         {
             for (int i = 0; i < playerTiles.Count; i++)
             {
-                var p = new Point((Width/2- (playerTiles.Count-1)*50/2) + i * 50, Height-180);
+                var p = new Point((Width/2 - (playerTiles.Count-1)*50/2) + i * 50, Height-180);
                 _tileModelControler.AddTileToUserBase(playerTiles[i], p);
-
             }
         }
 
@@ -265,51 +265,7 @@ namespace Dominoes.GUI
             var moves = _gameLogic.GameMoves;
             var m0 = moves.First;
 
-            //var m0  =  moves.FirstMove(new Tile(0, 0));
-            //var m1  =  moves.NewMove(new Tile(1, 0), m0, Side.Top);
-            //var m1_1 = moves.NewMove(new Tile(1, 1), m1, Side.Top);
-            //var m2 = moves.NewMove(new Tile(2, 0), m0, Side.Right);
-            //var m2_2 = moves.NewMove(new Tile(2, 2), m2, Side.Top);
-            //var m2_3 = moves.NewMove(new Tile(2, 2), m2_2, Side.Bottom);
-            //var m2_4 = moves.NewMove(new Tile(2, 3), m2_3, Side.Top);
-            //var m2_5 = moves.NewMove(new Tile(4, 2), m2_3, Side.Right);
-
-            //var m3 = moves.NewMove(new Tile(3, 0), m0, Side.Left);
-            //var m3_3 = moves.NewMove(new Tile(3, 3), m3, Side.Top);
-            //var m4 = moves.NewMove(new Tile(4, 0), m0, Side.Bottom);
-            //var m4_4 = moves.NewMove(new Tile(4, 4), m4, Side.Bottom);
-
             _tileModelControler.AddTileToGame(moves.First, _centr, Side.Center, Side.Top);
-            DrawingRecursion(moves.First.AvailableNeighbourNodes, moves.First);
-
-        }
-
-        /// <summary>
-        /// Recursion method that finds nodes and place dominoes
-        /// </summary>
-        /// <param name="neighbourNodes">List of neighbour nodes</param>
-        /// <param name="parentNode">Parent node</param>
-        private void DrawingRecursion(List<KeyValuePair<Side, Node>> neighbourNodes, Node parentNode)
-        {
-
-            foreach (var node in neighbourNodes)  
-            {
-                
-                var parentTileModel = _tileModelControler.GameTableTileModels.Find(x => x.CurrentNode == parentNode);
-
-                var parentSide = 4-parentTileModel.Angle + (int)parentNode.AvailableNeighbourNodes.Find(x => x.Value == node.Value).Key;
-                var childSide = node.Value.AvailableNeighbourNodes.Find(x => x.Value == parentNode).Key;
-                var point = (Point)parentTileModel.Connector((Side)(parentSide%4));
-
-                _tileModelControler.AddTileToGame(node.Value, point, (Side)(parentSide % 4), childSide);
-                //Background.Children.Add(new Ellipse { Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0), Fill = Brushes.OrangeRed, Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left});
-
-                var childNeighbourNodes = node.Value.AvailableNeighbourNodes.Where(x => x.Value != parentNode).ToList();
-                if (childNeighbourNodes.Count >0)
-                {
-                    DrawingRecursion(childNeighbourNodes, node.Value);
-                }
-            }
         }
 
         /// <summary>
@@ -325,12 +281,12 @@ namespace Dominoes.GUI
 
                 if (!_tileModelControler.UserBaseTileModels.Contains(model) && _nearConnector != null && _newTile.CurrentNode != null)
                 {
-                    var pn = _nearConnector.ConnectorTileModel.CurrentNode;
+                    var pn = _nearConnector.ParentTileModel.CurrentNode;
 
                     var moves = _gameLogic.GameMoves;
-                    var childTileSide = _gameLogic.GameMoves.GetMatchSide(_nearConnector.ConnectorTileModel.CurrentNode, _newTile.CurrentNode, _nearConnector.ConnectorSide);
+                    var childTileSide = _gameLogic.GameMoves.GetMatchSide(_nearConnector.ParentTileModel.CurrentNode, _newTile.CurrentNode, _nearConnector.ConnectorSide);
 
-                    var b = _nearConnector.ConnectorTileModel.Angle;
+                    var b = _nearConnector.ParentTileModel.Angle;
                     var parentSide = (4 - b + (int)_nearConnector.ConnectorSide) % 4;
                     var t = _newTile.CurrentNode.CurrentTile;
                     var currNode = _gameLogic.PlayerMoves(t, pn, (Side)_nearConnector.ConnectorSide);
@@ -390,7 +346,7 @@ namespace Dominoes.GUI
                     foreach (var side in sides)
                     {
                         var point = tileModel.SideCoords(side.Key);
-                        leavesConnectors.Add(new Leaf(tileModel, side.Key, point));
+                        leavesConnectors.Add(new Leaf(tileModel, (Side)((int)side.Key % 4), point));
                     }
                 }
             }
@@ -417,9 +373,10 @@ namespace Dominoes.GUI
         {
             if (_gameLogic.IsPlayerTurn)
             {
+                //get match free connectors
                 var connectors = GetLeavesConnectors(_gameLogic.GameMoves.Leaves).Where(x =>
-                x.ConnectorTileModel.CurrentNode.CurrentTile.GetSideValue(x.ConnectorSide) == tile.TopEnd ||
-                x.ConnectorTileModel.CurrentNode.CurrentTile.GetSideValue(x.ConnectorSide) == tile.BottomEnd).ToList();
+                x.ParentTileModel.CurrentNode.CurrentTile.GetSideValue(x.ConnectorSide) == tile.TopEnd ||
+                x.ParentTileModel.CurrentNode.CurrentTile.GetSideValue(x.ConnectorSide) == tile.BottomEnd).ToList();
 
                 foreach (var item in connectors)
                 {
@@ -430,7 +387,8 @@ namespace Dominoes.GUI
                 if (connectors.Count > 0)
                 {
                     var points = connectors.Select(x => x.ConnectorPoint).ToList();
-                    var vectors = points.Select(x => (x - mouse)).ToList();
+                    var vectors = points.Select(x => (x - mouse)).ToList(); //Vector from mouse to connector
+
                     var minLength = points.Select(x => (x - mouse).Length).Min();
                     var minVectors = vectors.Find(x => x.Length == minLength);
 
@@ -438,11 +396,10 @@ namespace Dominoes.GUI
                     {
                         _nearConnector = connectors.Find(x => x.ConnectorPoint == (mouse + minVectors));
                         var point = _nearConnector.ConnectorPoint;
-                        var childNodde = new Node { CurrentTile = tile };
-                        _nearConnector.ConnectorSide = (Side)(((int)_nearConnector.ConnectorSide) % 4);
+                        var childNode = new Node { CurrentTile = tile };
                         var parentTileSide = _nearConnector.ConnectorSide;
-                        var childTileSide = _gameLogic.GameMoves.GetMatchSide(_nearConnector.ConnectorTileModel.CurrentNode, childNodde, parentTileSide);
-                        int angle = (2 + _nearConnector.ConnectorTileModel.Angle - ((int)parentTileSide) + ((int)childTileSide)) % 4;
+                        var childTileSide = _gameLogic.GameMoves.GetMatchSide(_nearConnector.ParentTileModel.CurrentNode, childNode, parentTileSide);
+                        int angle = (2 + _nearConnector.ParentTileModel.Angle - ((int)parentTileSide) + ((int)childTileSide)) % 4;
                         var offset = _newTile.OffsetVector(childTileSide);
                         point.X = point.X - offset.X;
                         point.Y = point.Y - offset.Y;

@@ -16,12 +16,25 @@ namespace Dominoes.GUI
     /// </summary>
     class TileModelControler
     {
-        private Grid _parentGrid;
+        private Grid _parentGrid; 
         double tileWidth;
         double tileHeight;
+
+        /// <summary>
+        /// List of tiles on the table
+        /// </summary>
         public List<TileModel> GameTableTileModels { get; private set; }
+
+        /// <summary>
+        /// List of user's tiles
+        /// </summary>
         public List<TileModel> UserBaseTileModels { get; private set; }
+        
         public delegate void TilePickHandler(Node node);
+
+        /// <summary>
+        /// Tile picked from user base
+        /// </summary>
         public event TilePickHandler TilePicked;
 
         public TileModelControler(Grid grid)
@@ -34,6 +47,15 @@ namespace Dominoes.GUI
             tileHeight = (new TileModel()).Tile.Height;
         }
 
+        /// <summary>
+        /// Set tilemodel centr coords and its rotating angle
+        /// </summary>
+        /// <param name="tileModel">Tilemodel which is applied parametrs to</param>
+        /// <param name="node">Node parameter</param>
+        /// <param name="point">Point of parent side</param>
+        /// <param name="parentTileSide">Parent sile side</param>
+        /// <param name="childTileSide">Child tile side</param>
+        /// <returns></returns>
         private TileModel SetTileParameters(TileModel tileModel, Node node, Point point, Side parentTileSide, Side childTileSide)
         {
             tileModel.CurrentNode = node;
@@ -52,34 +74,46 @@ namespace Dominoes.GUI
             return tileModel;
         }
 
+        /// <summary>
+        /// Add tile to game table
+        /// </summary>
+        /// <param name="node">New node</param>
+        /// <param name="point">Point of parent side</param>
+        /// <param name="parentTileSide">Parent sile side</param>
+        /// <param name="childTileSide">Child tile side</param>
+        /// <returns>Added tile model</returns>
         public TileModel AddTileToGame(Node node, Point point, Side parentTileSide, Side childTileSide)
         {
-            
             TileModel tileModel = new TileModel();
             SetTileParameters(tileModel,node, point, parentTileSide, childTileSide);
 
             _parentGrid.Children.Add(tileModel);
             GameTableTileModels.Add(tileModel);
-            //_parentGrid.Children.Add(new Ellipse { Margin = new Thickness(point.X - 4, point.Y - 4, 0, 0), Fill = Brushes.Aqua, Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left });
             return tileModel;
         }
 
+        /// <summary>
+        /// Add tile to user interface on exact coords
+        /// </summary>
+        /// <param name="tile">New tile</param>
+        /// <param name="point">Point on the table</param>
         public void AddTileToUserBase(Tile tile, Point point)
         {
             TileModel tileModel = new TileModel();
             var node = new Node { CurrentTile = tile };
             tileModel.CurrentNode = node;
-            tileModel.VerticalAlignment = VerticalAlignment.Top;
-            tileModel.HorizontalAlignment = HorizontalAlignment.Left;
-            var offset = tileModel.SideCoords(Side.Center);
-            point = (Point)(point - offset);
-            tileModel.Margin = new Thickness(point.X, point.Y, 0, 0);
+
+            tileModel.Center = point;
             tileModel.MouseDown += TileModel_MouseDown;
             UserBaseTileModels.Add(tileModel);
             _parentGrid.Children.Add(tileModel);
-
         }
 
+        /// <summary>
+        /// Executes when clicked on tile from user base
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TileModel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             foreach (var tileModel in UserBaseTileModels)
