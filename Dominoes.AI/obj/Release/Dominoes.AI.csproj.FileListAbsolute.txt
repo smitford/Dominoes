@@ -1,4 +1,0 @@
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\bin\Release\Dominoes.AI.dll
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\bin\Release\Dominoes.AI.pdb
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\obj\Release\Dominoes.AI.dll
-C:\Users\David\Documents\GitHub\Dominoes\Dominoes.AI\obj\Release\Dominoes.AI.pdb
