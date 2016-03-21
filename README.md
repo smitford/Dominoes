@@ -3,7 +3,7 @@ It is a game played with rectangular "domino" tiles. The domino gaming pieces ma
 
 Solution start instruction!!!
 1. Set Dominoes.GUI as startUp project
-2. Choose Dominoes.DB and install EntityFramework 6.3.1 package
+2. Install EntityFramework 6.3.1 package for DB and GUI projects
 3. In Db project History.cs find line with data source. Replace "(LocalDb)\\MSSQLLocalDB" with the name of your db.
 4. Type Update-Database in nuget package manager console
 5. Run all tests.

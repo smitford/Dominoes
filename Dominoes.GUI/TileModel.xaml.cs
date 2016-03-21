@@ -73,8 +73,8 @@ namespace Dominoes.GUI
             }
         }
 
-        public double TileWidth { get; }
-        public double TileHeight { get; }
+        public double TileWidth { get; private set; }
+        public double TileHeight { get; private set; }
 
         public TileModel()
         {
